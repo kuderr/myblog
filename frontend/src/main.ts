@@ -1,18 +1,13 @@
 import Vue from "vue";
-import ElementUI from "element-ui";
-import "element-ui/lib/theme-chalk/index.css";
-// import "element-theme-dark";
-import "./style.less";
-import App from "./App.vue";
-import "./registerServiceWorker";
-import router from "./router";
-import store from "./store";
-
-Vue.use(ElementUI);
+import App from "@/App.vue";
+import vuetify from "@/plugins/vuetify";
+import router from "@/router";
+import store from "@/store";
 
 Vue.config.productionTip = false;
 
 new Vue({
+  vuetify,
   router,
   store,
   render: (h) => h(App),

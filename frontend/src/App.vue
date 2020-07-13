@@ -1,38 +1,59 @@
 <template>
-  <div id="app">
-    <Header />
-    <Menu />
+  <v-app>
+    <Drawer />
 
-    <el-container>
-      <el-main>
+    <v-content>
+      <v-container fluid>
         <router-view></router-view>
-      </el-main>
-    </el-container>
-  </div>
+      </v-container>
+    </v-content>
+
+    <!-- Ошибки и сообщнеия: -->
+    <!-- <template v-if="error">
+      <v-snackbar
+        :multi-line="true"
+        :timeout="3000"
+        @input="closeError"
+        :value="true"
+        color="error"
+      >
+        {{ error }}
+        <v-btn dark text @click="closeError">Close</v-btn>
+      </v-snackbar>
+    </template>
+
+    <template v-if="message">
+      <v-snackbar
+        :multi-line="true"
+        :timeout="3000"
+        @input="closeMessage"
+        :value="true"
+        color="primary"
+      >
+        {{ message }}
+        <v-btn dark text @click="closeMessage">Close</v-btn>
+      </v-snackbar>
+    </template> -->
+    <!-- ------------------------ -->
+  </v-app>
 </template>
 
 <script lang="ts">
-import Header from "@/components/Header.vue";
-import Menu from "@/components/Menu.vue";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import Drawer from "@/components/Drawer.vue";
+import { Component, Vue } from "vue-property-decorator";
 
 @Component({
   components: {
-    Header,
-    Menu
-  }
+    Drawer,
+  },
 })
 export default class App extends Vue {}
 </script>
 
-<style >
+<style lang="scss">
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  width: 65%;
-  margin: 30px auto;
 }
 </style>
