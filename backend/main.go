@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"backend/models"
@@ -16,7 +17,13 @@ type Env struct {
 }
 
 func main() {
-	db, err := models.InitDB("bla")
+	dbUrl := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable",
+		os.Getenv("BLOG_DB_USER"),
+		os.Getenv("BLOG_DB_PASSWORD"),
+		os.Getenv("BLOG_DB_NAME"),
+	)
+
+	db, err := models.InitDB(dbUrl)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -24,7 +31,7 @@ func main() {
 	env := &Env{db}
 
 	router := httprouter.New()
-	router.GET("/posts", TokenAuth(env.getPosts))
+	router.GET("/posts", env.getPosts)
 
 	srv := &http.Server{
 		Handler:      router,
@@ -55,6 +62,6 @@ func (env *Env) getPosts(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 	}
 
 	for _, post := range posts {
-		fmt.Fprintf(w, "%s, %s, %s\n", post.ID, post.Title, post.Summary)
+		fmt.Fprintf(w, "%d, %s, %s\n", post.ID, post.Title, post.Summary)
 	}
 }

@@ -1,11 +1,14 @@
 package models
 
+import "time"
+
 type Post struct {
-	ID      int
-	Title   string
-	Summary string
-	Body    string
-	Author  string
+	ID         int
+	Title      string
+	Summary    string
+	Body       string
+	AuthorId   string
+	DatePosted time.Time
 }
 
 func (db *DB) AllPostsShorten() ([]Post, error) {
