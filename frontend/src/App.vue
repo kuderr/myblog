@@ -8,6 +8,12 @@
       </v-container>
     </v-content>
 
+    <v-fab-transition>
+      <v-btn small fab fixed bottom right @click="switchColorMode()">
+        <v-icon>invert_colors</v-icon>
+      </v-btn>
+    </v-fab-transition>
+
     <!-- Ошибки и сообщнеия: -->
     <!-- <template v-if="error">
       <v-snackbar
@@ -33,7 +39,7 @@
         {{ message }}
         <v-btn dark text @click="closeMessage">Close</v-btn>
       </v-snackbar>
-    </template> -->
+    </template>-->
     <!-- ------------------------ -->
   </v-app>
 </template>
@@ -47,7 +53,16 @@ import { Component, Vue } from "vue-property-decorator";
     Drawer,
   },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  switchColorMode() {
+    this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+    localStorage.darkMode = this.$vuetify.theme.dark;
+  }
+
+  mounted() {
+    this.$vuetify.theme.dark = localStorage.darkMode === "true" ? true : false;
+  }
+}
 </script>
 
 <style lang="scss">

@@ -45,14 +45,14 @@ export default class Home extends Vue {
       color: "#1F7087",
       img: "https://cdn.vuetifyjs.com/images/cards/foster.jpg",
       title: "Supermodel",
-      summary: "Foster the People",
+      summary: "Foster the People"
     },
     {
       color: "#952175",
       img: "https://cdn.vuetifyjs.com/images/cards/halcyon.png",
       title: "Halcyon Days",
-      summary: "Ellie Goulding",
-    },
+      summary: "Ellie Goulding"
+    }
   ];
 }
 </script>
