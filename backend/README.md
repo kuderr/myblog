@@ -24,8 +24,8 @@ CREATE TABLE posts (
     title          varchar(255) NOT NULL,
     summary        varchar(255) NOT NULL,
     body           text,
-    date_created   date,
-    date_updated   date,
+    date_created   timestamp NOT NULL DEFAULT NOW(),
+    date_updated   timestamp NOT NULL DEFAULT NOW(),
     author_id      integer,
     CONSTRAINT fk_user
       FOREIGN KEY(author_id) REFERENCES users(id)
@@ -90,8 +90,8 @@ CREATE TABLE comments (
     post_id        integer,
     user_id        integer,
     body           text,
-    date_created   date,
-    date_updated   date,
+    date_created   timestamp NOT NULL DEFAULT NOW(),
+    date_updated   timestamp NOT NULL DEFAULT NOW(),
 
     CONSTRAINT comment_pk PRIMARY KEY (post_id, user_id),
     CONSTRAINT fk_post

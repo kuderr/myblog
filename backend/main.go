@@ -1,16 +1,24 @@
 package main
 
 import (
+	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	"backend/models"
 
 	"github.com/julienschmidt/httprouter"
+	"github.com/rs/cors"
 )
+
+type Response struct {
+	Msg string `json:"msg"`
+}
 
 type Env struct {
 	db models.Datastore
@@ -32,13 +40,19 @@ func main() {
 
 	router := httprouter.New()
 	router.GET("/posts", env.getPosts)
+	router.POST("/posts", env.addPost)
+	router.GET("/posts/:id", env.getPost)
+
+	handler := cors.Default().Handler(router)
 
 	srv := &http.Server{
-		Handler:      router,
+		Handler:      handler,
 		Addr:         "127.0.0.1:5000",
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
+
+	fmt.Println("Server starting on http://127.0.0.1:5000")
 
 	log.Fatal(srv.ListenAndServe())
 }
@@ -61,7 +75,75 @@ func (env *Env) getPosts(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		http.Error(w, http.StatusText(500), 500)
 	}
 
-	for _, post := range posts {
-		fmt.Fprintf(w, "%d, %s, %s\n", post.ID, post.Title, post.Summary)
+	respData, err_ := json.Marshal(posts)
+	if err_ != nil {
+		http.Error(w, http.StatusText(500), 500)
+		return
 	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	w.Write(respData)
+}
+
+func (env *Env) getPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	id := ps.ByName("id")
+	postId, err := strconv.Atoi(id)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	post, err := env.db.GetPostData(postId)
+	switch {
+	case err == sql.ErrNoRows:
+		log.Println(err)
+		http.NotFound(w, r)
+		return
+	case err != nil:
+		log.Println(err)
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	respData, err_ := json.Marshal(post)
+	if err_ != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	w.Write(respData)
+}
+
+func (env *Env) addPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	var post models.Post
+	err := json.NewDecoder(r.Body).Decode(&post)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(400), 400)
+		return
+	}
+
+	err = env.db.AddPost(&post)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	resp := Response{"Post successfully created"}
+	respData, err_ := json.Marshal(resp)
+	if err_ != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(201)
+	w.Write(respData)
 }

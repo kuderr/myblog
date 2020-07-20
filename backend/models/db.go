@@ -9,6 +9,8 @@ import (
 
 type Datastore interface {
 	AllPostsShorten() ([]Post, error)
+	AddPost(*Post) error
+	GetPostData(int) (Post, error)
 }
 
 type DB struct {
