@@ -4,7 +4,9 @@
       <v-col cols="12" md="4">
         <v-text-field
           v-model.trim="post.title"
-          :rules="[(v) => !!v || 'Title is required']"
+          :rules="[(v) => !!v || 'Title is required',
+          v => v.length <= 50 || 'Title must be less than 50 characters']"
+          :counter="50"
           label="Title"
           required
         ></v-text-field>
@@ -13,7 +15,9 @@
       <v-col cols="12" md="8">
         <v-textarea
           v-model.trim="post.summary"
-          :rules="[(v) => !!v || 'Summary is required']"
+          :counter="255"
+          :rules="[(v) => !!v || 'Summary is required',
+                    v => v.length <= 255 || 'Summary must be less than 255 characters']"
           label="Summary"
           required
           auto-grow
@@ -28,9 +32,7 @@
         placeholder="Текст поста"
         :toolbar-attributes="{ color: 'black', dark: true }"
       />
-      <v-btn class="mt-2" block color="secondary" @click="savePost"
-        >Сохранить</v-btn
-      >
+      <v-btn class="mt-2" block color="secondary" @click="savePost">Сохранить</v-btn>
     </div>
   </v-form>
 </template>
@@ -46,7 +48,7 @@ import {
   Italic,
   Strike,
   Underline,
-  Code,
+  CodeBlock,
   Paragraph,
   BulletList,
   OrderedList,
@@ -56,15 +58,15 @@ import {
   HardBreak,
   HorizontalRule,
   History,
-  Image,
+  Image
 } from "tiptap-vuetify";
 
 import { addPost } from "../api";
 
 @Component({
   components: {
-    TiptapVuetify,
-  },
+    TiptapVuetify
+  }
 })
 export default class Posts extends Vue {
   private valid: boolean = false;
@@ -77,7 +79,7 @@ export default class Posts extends Vue {
     title: "",
     summary: "",
     body: "",
-    authorId: 1,
+    authorId: 1
   };
 
   private savePost(): void {
@@ -103,16 +105,29 @@ export default class Posts extends Vue {
       Heading,
       {
         options: {
-          levels: [1, 2, 3],
-        },
-      },
+          levels: [1, 2, 3]
+        }
+      }
     ],
     Bold,
     Link,
-    Code,
+    CodeBlock,
     HorizontalRule,
     Paragraph,
-    HardBreak,
+    HardBreak
   ];
 }
 </script>
+
+<style lang="scss" >
+.v-application code {
+  background-color: black;
+  color: white;
+}
+img {
+  max-width: 100%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>

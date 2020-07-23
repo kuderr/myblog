@@ -1,58 +1,93 @@
 <template>
-  <v-card class="mx-auto" color="#26c6da" dark max-width="400">
-    <v-card-title>
-      <v-icon large left>mdi-twitter</v-icon>
-      <span class="title font-weight-light">Twitter</span>
-    </v-card-title>
+  <div :class="`d-flex flex-wrap mb-6`">
+    <v-card
+      v-for="post in posts"
+      :key="post.id"
+      class="ma-2 align-self-start"
+      :color="post.color"
+      dark
+      max-width="400"
+      :to="`/posts/${post.id}`"
+    >
+      <v-img :src="post.img" height="194"></v-img>
 
-    <v-card-text class="headline font-weight-bold">
-      "Turns out semicolon-less style is easier and safer in TS because most
-      gotcha edge cases are type invalid as well."
-    </v-card-text>
+      <v-card-title>
+        <span class="title font-weight-bold">{{post.title}}</span>
+      </v-card-title>
 
-    <v-card-actions>
-      <v-list-item class="grow">
-        <v-list-item-avatar color="grey darken-3">
-          <v-img
-            class="elevation-6"
-            src="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
-          ></v-img>
-        </v-list-item-avatar>
+      <v-card-text class="headline font-weight-bold">{{post.summary}}</v-card-text>
 
-        <v-list-item-content>
-          <v-list-item-title>Evan You</v-list-item-title>
-        </v-list-item-content>
+      <v-card-actions>
+        <v-list-item class="grow">
+          <v-list-item-avatar color="grey darken-3">
+            <v-img class="elevation-6" :src="post.author_avatar"></v-img>
+          </v-list-item-avatar>
 
-        <v-row align="center" justify="end">
-          <v-icon class="mr-1">mdi-heart</v-icon>
-          <span class="subheading mr-2">256</span>
-          <span class="mr-1">·</span>
-          <v-icon class="mr-1">mdi-share-variant</v-icon>
-          <span class="subheading">45</span>
-        </v-row>
-      </v-list-item>
-    </v-card-actions>
-  </v-card>
+          <v-list-item-content>
+            <v-list-item-title>{{post.author_name}}</v-list-item-title>
+          </v-list-item-content>
+
+          <v-row align="center" justify="end">
+            <v-icon class="mr-1">mdi-heart</v-icon>
+            <span class="subheading mr-2">{{post.likes}}</span>
+            <span class="mr-1">·</span>
+            <v-icon class="mr-1">mdi-share-variant</v-icon>
+          </v-row>
+        </v-list-item>
+      </v-card-actions>
+    </v-card>
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 
+import { getPosts } from "../api";
+
 @Component
 export default class Home extends Vue {
-  items = [
+  posts = [
     {
+      id: 1,
+      color: "#26c6da",
+      img: "https://cdn.vuetifyjs.com/images/cards/mountain.jpg",
+      likes: 256,
+      author_name: "Evan You",
+      author_avatar:
+        "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light",
+      title: "Twitter",
+      summary: `Turns out semicolon-less style is easier and safer in TS because most
+        gotcha edge cases are type invalid as well."`
+    },
+    {
+      id: 2,
       color: "#1F7087",
       img: "https://cdn.vuetifyjs.com/images/cards/foster.jpg",
       title: "Supermodel",
       summary: "Foster the People"
     },
     {
+      id: 3,
+      color: "#952175",
+      img: "https://cdn.vuetifyjs.com/images/cards/halcyon.png",
+      title: "Halcyon Days",
+      summary: "Ellie Goulding"
+    },
+    {
+      id: 4,
       color: "#952175",
       img: "https://cdn.vuetifyjs.com/images/cards/halcyon.png",
       title: "Halcyon Days",
       summary: "Ellie Goulding"
     }
   ];
+
+  created() {
+    let posts;
+    getPosts().then(res => {
+      posts = res.data;
+      this.posts = [...this.posts, ...posts];
+    });
+  }
 }
 </script>

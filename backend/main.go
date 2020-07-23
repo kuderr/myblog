@@ -25,7 +25,7 @@ type Env struct {
 }
 
 func main() {
-	dbUrl := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable",
+	dbUrl := fmt.Sprintf("postgres://%s:%s@localhost/%s?sslmode=disable",
 		os.Getenv("BLOG_DB_USER"),
 		os.Getenv("BLOG_DB_PASSWORD"),
 		os.Getenv("BLOG_DB_NAME"),
@@ -52,7 +52,7 @@ func main() {
 		ReadTimeout:  15 * time.Second,
 	}
 
-	fmt.Println("Server starting on http://127.0.0.1:5000")
+	fmt.Println("Server starting at http://127.0.0.1:5000")
 
 	log.Fatal(srv.ListenAndServe())
 }
@@ -91,7 +91,7 @@ func (env *Env) getPost(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 	postId, err := strconv.Atoi(id)
 	if err != nil {
 		log.Println(err)
-		http.Error(w, http.StatusText(500), 500)
+		http.Error(w, http.StatusText(400), 400)
 		return
 	}
 
