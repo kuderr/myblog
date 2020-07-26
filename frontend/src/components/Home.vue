@@ -57,37 +57,34 @@ export default class Home extends Vue {
         "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light",
       title: "Twitter",
       summary: `Turns out semicolon-less style is easier and safer in TS because most
-        gotcha edge cases are type invalid as well."`
+        gotcha edge cases are type invalid as well."`,
     },
     {
       id: 2,
       color: "#1F7087",
       img: "https://cdn.vuetifyjs.com/images/cards/foster.jpg",
       title: "Supermodel",
-      summary: "Foster the People"
+      summary: "Foster the People",
     },
     {
       id: 3,
       color: "#952175",
       img: "https://cdn.vuetifyjs.com/images/cards/halcyon.png",
       title: "Halcyon Days",
-      summary: "Ellie Goulding"
+      summary: "Ellie Goulding",
     },
     {
       id: 4,
       color: "#952175",
       img: "https://cdn.vuetifyjs.com/images/cards/halcyon.png",
       title: "Halcyon Days",
-      summary: "Ellie Goulding"
-    }
+      summary: "Ellie Goulding",
+    },
   ];
 
-  created() {
-    let posts;
-    getPosts().then(res => {
-      posts = res.data;
-      this.posts = [...this.posts, ...posts];
-    });
+  async created() {
+    let res = await getPosts();
+    this.posts = [...this.posts, ...res.data];
   }
 }
 </script>

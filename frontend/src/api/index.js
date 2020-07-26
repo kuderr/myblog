@@ -9,3 +9,7 @@ export function addPost(postData) {
 export function getPosts() {
   return axios.get(`${API_URL}/posts`);
 }
+
+export function getPost(postId) {
+  return axios.get(`${API_URL}/posts/${postId}`);
+}
