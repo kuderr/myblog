@@ -53,7 +53,6 @@ import {
   Strike,
   Underline,
   CodeBlock,
-  Paragraph,
   BulletList,
   OrderedList,
   ListItem,
@@ -96,11 +95,10 @@ export default class Posts extends Vue {
   // tiptap extensions declare
   extensions = [
     History,
-    Blockquote,
-    Link,
+    Bold,
+    Italic,
     Underline,
     Strike,
-    Italic,
     ListItem,
     BulletList,
     OrderedList,
@@ -113,11 +111,10 @@ export default class Posts extends Vue {
         },
       },
     ],
-    Bold,
-    Link,
     CodeBlock,
+    Blockquote,
+    Link,
     HorizontalRule,
-    Paragraph,
     HardBreak,
   ];
 }
@@ -127,6 +124,9 @@ export default class Posts extends Vue {
 .v-application code {
   background-color: black;
   color: white;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 img {
   max-width: 100%;

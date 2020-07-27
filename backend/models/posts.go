@@ -15,7 +15,7 @@ type Post struct {
 }
 
 func (db *DB) AllPostsShorten() ([]Post, error) {
-	rows, err := db.Query("SELECT id, title, summary FROM posts")
+	rows, err := db.Query("SELECT id, title, summary FROM posts ORDER BY date_created DESC")
 	if err != nil {
 		return nil, err
 	}
