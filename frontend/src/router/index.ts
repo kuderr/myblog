@@ -15,7 +15,12 @@ const routes: RouteConfig[] = [
     component: () => import("@/views/Post.vue"),
   },
   {
-    path: "/editor",
+    path: "/your-posts",
+    name: "UserPosts",
+    component: () => import("@/views/UserPosts.vue"),
+  },
+  {
+    path: "/editor/:id",
     name: "Editor",
     component: () => import("@/views/Editor.vue"),
   },

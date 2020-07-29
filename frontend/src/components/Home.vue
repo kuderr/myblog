@@ -63,10 +63,6 @@ export default class Home extends Vue {
     },
   ];
 
-  test() {
-    console.log("kek");
-  }
-
   async created() {
     let res = await getPosts();
     res.data.forEach((element) => {

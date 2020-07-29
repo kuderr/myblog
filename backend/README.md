@@ -27,6 +27,7 @@ CREATE TABLE posts (
     date_created   timestamp NOT NULL DEFAULT NOW(),
     date_updated   timestamp NOT NULL DEFAULT NOW(),
     author_id      integer,
+    published      boolean NOT NULL DEFAULT FALSE,
     CONSTRAINT fk_user
       FOREIGN KEY(author_id) REFERENCES users(id)
 );

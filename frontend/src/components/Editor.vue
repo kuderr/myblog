@@ -34,7 +34,24 @@
             placeholder="Текст поста"
             :toolbar-attributes="{ color: 'black', dark: true }"
           />
-          <v-btn class="mt-2" block color="secondary" @click="savePost">Сохранить</v-btn>
+          <template>
+            <v-btn class="mt-3" block color="secondary" @click="updatePost()">Сохранить</v-btn>
+            <v-btn
+              class="mt-1"
+              block
+              color="primary"
+              v-if="post.published"
+              @click="switchPublishedStatus()"
+            >Отменить публикацию</v-btn>
+            <v-btn
+              v-else
+              class="mt-1"
+              block
+              color="primary"
+              @click="switchPublishedStatus()"
+            >Публиковать</v-btn>
+            <v-btn class="mt-1" block color="error" @click="deletePost()">Удалить</v-btn>
+          </template>
         </div>
       </v-form>
     </v-flex>
@@ -43,6 +60,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+
 import {
   // component
   TiptapVuetify,
@@ -64,20 +82,25 @@ import {
   Image,
 } from "tiptap-vuetify";
 
-import { addPost } from "../api";
+import { getPost, updatePost, updatePublishedStatus, deletePost } from "../api";
 
 @Component({
   components: {
     TiptapVuetify,
   },
 })
-export default class Posts extends Vue {
+export default class Editor extends Vue {
   private valid: boolean = false;
+  private postId: string;
   private post: {
     title: string;
     summary: string;
     body: string;
     authorId: number;
+    published?: boolean;
+    dateCreated?: string;
+    dateUpdated?: string;
+    id?: number;
   } = {
     title: "",
     summary: "",
@@ -85,11 +108,28 @@ export default class Posts extends Vue {
     authorId: 1,
   };
 
-  private savePost(): void {
+  async created() {
+    this.postId = this.$router.currentRoute.params["id"];
+    let res = await getPost(this.postId);
+    this.post = res.data;
+    this.post["img"] = "https://cdn.vuetifyjs.com/images/cards/docks.jpg";
+  }
+
+  private async updatePost() {
     if (this.$refs.form.validate()) {
-      addPost(this.post);
-      this.$router.push("/");
+      console.log(this.post);
+      await updatePost(this.post);
     }
+  }
+
+  private switchPublishedStatus(): void {
+    this.post.published = !this.post.published;
+    updatePublishedStatus(this.postId, this.post.published);
+  }
+
+  private deletePost(): void {
+    deletePost(this.postId);
+    this.$router.push("/your-posts");
   }
 
   // tiptap extensions declare

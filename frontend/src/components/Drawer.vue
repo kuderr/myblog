@@ -46,9 +46,10 @@ export default class Drawer extends Vue {
   drawer: boolean = localStorage.drawer === "true" ? true : false;
   items = [
     { title: "Главная", icon: "dashboard", path: "/" },
-    { title: "Редактор", icon: "edit", path: "/editor" },
+    { title: "Твои посты", icon: "edit", path: "/your-posts" },
     { title: "Об авторе", icon: "info", path: "/about" },
   ];
+
   user = {
     name: "Dima",
     email: "dimonkudr2100@gmail.com",

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -18,6 +17,11 @@ import (
 
 type Response struct {
 	Msg string `json:"msg"`
+}
+
+type ResponsePost struct {
+	Msg    string `json:"msg"`
+	PostId int    `json:"postId"`
 }
 
 type Env struct {
@@ -39,14 +43,22 @@ func main() {
 	env := &Env{db}
 
 	router := httprouter.New()
-	router.GET("/posts", env.getPosts)
 	router.POST("/posts", env.addPost)
+	router.GET("/posts", env.getPosts)
 	router.GET("/posts/:id", env.getPost)
+	router.PUT("/posts/:id", env.updatePost)
+	router.DELETE("/posts/:id", env.deletePost)
+	router.GET("/users/:id/posts", env.getUserPosts)
+	router.PATCH("/posts/:id/published", env.updatePostPublishedStatus)
 
-	handler := cors.Default().Handler(router)
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "PATCH"},
+		AllowCredentials: true,
+	})
 
 	srv := &http.Server{
-		Handler:      handler,
+		Handler:      c.Handler(router),
 		Addr:         "127.0.0.1:5000",
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
@@ -67,6 +79,35 @@ func TokenAuth(handler httprouter.Handle) httprouter.Handle {
 
 		handler(w, r, ps)
 	}
+}
+
+func (env *Env) addPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	var post models.Post
+	err := json.NewDecoder(r.Body).Decode(&post)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(400), 400)
+		return
+	}
+
+	postId, err := env.db.AddPost(&post)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	resp := ResponsePost{"Post successfully created", postId}
+	respData, err_ := json.Marshal(resp)
+	if err_ != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(201)
+	w.Write(respData)
 }
 
 func (env *Env) getPosts(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -96,12 +137,7 @@ func (env *Env) getPost(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 	}
 
 	post, err := env.db.GetPostData(postId)
-	switch {
-	case err == sql.ErrNoRows:
-		log.Println(err)
-		http.NotFound(w, r)
-		return
-	case err != nil:
+	if err != nil {
 		log.Println(err)
 		http.Error(w, http.StatusText(500), 500)
 		return
@@ -119,23 +155,31 @@ func (env *Env) getPost(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 	w.Write(respData)
 }
 
-func (env *Env) addPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	var post models.Post
-	err := json.NewDecoder(r.Body).Decode(&post)
+func (env *Env) updatePost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	id := ps.ByName("id")
+	postId, err := strconv.Atoi(id)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, http.StatusText(400), 400)
 		return
 	}
 
-	err = env.db.AddPost(&post)
+	var post models.Post
+	err = json.NewDecoder(r.Body).Decode(&post)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(400), 400)
+		return
+	}
+
+	err = env.db.UpdatePost(postId, &post)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, http.StatusText(500), 500)
 		return
 	}
 
-	resp := Response{"Post successfully created"}
+	resp := Response{"Post successfully updated"}
 	respData, err_ := json.Marshal(resp)
 	if err_ != nil {
 		log.Println(err)
@@ -144,6 +188,101 @@ func (env *Env) addPost(w http.ResponseWriter, r *http.Request, _ httprouter.Par
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(201)
+	w.WriteHeader(200)
+	w.Write(respData)
+
+}
+
+func (env *Env) deletePost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	id := ps.ByName("id")
+	postId, err := strconv.Atoi(id)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(400), 400)
+		return
+	}
+
+	err = env.db.DeletePost(postId)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(400), 400)
+		return
+	}
+
+	resp := Response{"Post successfully deleted"}
+	respData, err_ := json.Marshal(resp)
+	if err_ != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	w.Write(respData)
+}
+
+func (env *Env) getUserPosts(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	id := ps.ByName("id")
+	userId, err := strconv.Atoi(id)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(400), 400)
+		return
+	}
+
+	posts, err := env.db.GetUserPosts(userId)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	respData, err_ := json.Marshal(posts)
+	if err_ != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	w.Write(respData)
+}
+
+func (env *Env) updatePostPublishedStatus(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	id := ps.ByName("id")
+	postId, err := strconv.Atoi(id)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(400), 400)
+		return
+	}
+
+	var post models.Post
+	err = json.NewDecoder(r.Body).Decode(&post)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(400), 400)
+		return
+	}
+
+	err = env.db.UpdatePostPublishedStatus(postId, post.Published)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	resp := Response{"Post successfully updated"}
+	respData, err_ := json.Marshal(resp)
+	if err_ != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
 	w.Write(respData)
 }

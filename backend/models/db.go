@@ -9,8 +9,12 @@ import (
 
 type Datastore interface {
 	AllPostsShorten() ([]Post, error)
-	AddPost(*Post) error
+	AddPost(*Post) (int, error)
 	GetPostData(int) (Post, error)
+	GetUserPosts(int) ([]Post, error)
+	UpdatePostPublishedStatus(int, bool) error
+	DeletePost(int) error
+	UpdatePost(int, *Post) error
 }
 
 type DB struct {

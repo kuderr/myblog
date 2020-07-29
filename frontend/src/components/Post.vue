@@ -24,12 +24,12 @@ import { getPost } from "../api";
 
 @Component
 export default class Post extends Vue {
-  post_id: string;
+  postId: string;
   post: object = {};
 
   async created() {
-    this.post_id = this.$router.currentRoute.params["id"];
-    let res = await getPost(this.post_id);
+    this.postId = this.$router.currentRoute.params["id"];
+    let res = await getPost(this.postId);
     this.post = res.data;
     this.post["img"] = "https://cdn.vuetifyjs.com/images/cards/docks.jpg";
   }
