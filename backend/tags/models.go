@@ -1,4 +1,4 @@
-package models
+package tags
 
 type Tag struct {
 	ID   int

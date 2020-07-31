@@ -1,4 +1,4 @@
-package models
+package likes
 
 type Like struct {
 	postId int

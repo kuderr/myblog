@@ -1,32 +1,18 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 	"time"
 
-	"backend/models"
+	"backend/config"
+	"backend/posts"
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
 )
-
-type Response struct {
-	Msg string `json:"msg"`
-}
-
-type ResponsePost struct {
-	Msg    string `json:"msg"`
-	PostId int    `json:"postId"`
-}
-
-type Env struct {
-	db models.Datastore
-}
 
 func main() {
 	dbUrl := fmt.Sprintf("postgres://%s:%s@localhost/%s?sslmode=disable",
@@ -35,21 +21,16 @@ func main() {
 		os.Getenv("BLOG_DB_NAME"),
 	)
 
-	db, err := models.InitDB(dbUrl)
-	if err != nil {
-		log.Panic(err)
-	}
-
-	env := &Env{db}
+	config.InitDB(dbUrl)
 
 	router := httprouter.New()
-	router.POST("/posts", env.addPost)
-	router.GET("/posts", env.getPosts)
-	router.GET("/posts/:id", env.getPost)
-	router.PUT("/posts/:id", env.updatePost)
-	router.DELETE("/posts/:id", env.deletePost)
-	router.GET("/users/:id/posts", env.getUserPosts)
-	router.PATCH("/posts/:id/published", env.updatePostPublishedStatus)
+	router.POST("/posts", posts.AddPost)
+	router.GET("/posts", posts.GetPosts)
+	router.GET("/posts/:id", posts.GetPost)
+	router.PUT("/posts/:id", posts.UpdatePost)
+	router.DELETE("/posts/:id", posts.DeletePost)
+	router.GET("/users/:id/posts", posts.GetUserPosts)
+	router.PATCH("/posts/:id/published", posts.UpdatePostPublishedStatus)
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
@@ -79,210 +60,4 @@ func TokenAuth(handler httprouter.Handle) httprouter.Handle {
 
 		handler(w, r, ps)
 	}
-}
-
-func (env *Env) addPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	var post models.Post
-	err := json.NewDecoder(r.Body).Decode(&post)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, http.StatusText(400), 400)
-		return
-	}
-
-	postId, err := env.db.AddPost(&post)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, http.StatusText(500), 500)
-		return
-	}
-
-	resp := ResponsePost{"Post successfully created", postId}
-	respData, err_ := json.Marshal(resp)
-	if err_ != nil {
-		log.Println(err)
-		http.Error(w, http.StatusText(500), 500)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(201)
-	w.Write(respData)
-}
-
-func (env *Env) getPosts(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	posts, err := env.db.AllPostsShorten()
-	if err != nil {
-		http.Error(w, http.StatusText(500), 500)
-	}
-
-	respData, err_ := json.Marshal(posts)
-	if err_ != nil {
-		http.Error(w, http.StatusText(500), 500)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(200)
-	w.Write(respData)
-}
-
-func (env *Env) getPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	id := ps.ByName("id")
-	postId, err := strconv.Atoi(id)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, http.StatusText(400), 400)
-		return
-	}
-
-	post, err := env.db.GetPostData(postId)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, http.StatusText(500), 500)
-		return
-	}
-
-	respData, err_ := json.Marshal(post)
-	if err_ != nil {
-		log.Println(err)
-		http.Error(w, http.StatusText(500), 500)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(200)
-	w.Write(respData)
-}
-
-func (env *Env) updatePost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	id := ps.ByName("id")
-	postId, err := strconv.Atoi(id)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, http.StatusText(400), 400)
-		return
-	}
-
-	var post models.Post
-	err = json.NewDecoder(r.Body).Decode(&post)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, http.StatusText(400), 400)
-		return
-	}
-
-	err = env.db.UpdatePost(postId, &post)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, http.StatusText(500), 500)
-		return
-	}
-
-	resp := Response{"Post successfully updated"}
-	respData, err_ := json.Marshal(resp)
-	if err_ != nil {
-		log.Println(err)
-		http.Error(w, http.StatusText(500), 500)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(200)
-	w.Write(respData)
-
-}
-
-func (env *Env) deletePost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	id := ps.ByName("id")
-	postId, err := strconv.Atoi(id)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, http.StatusText(400), 400)
-		return
-	}
-
-	err = env.db.DeletePost(postId)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, http.StatusText(400), 400)
-		return
-	}
-
-	resp := Response{"Post successfully deleted"}
-	respData, err_ := json.Marshal(resp)
-	if err_ != nil {
-		log.Println(err)
-		http.Error(w, http.StatusText(500), 500)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(200)
-	w.Write(respData)
-}
-
-func (env *Env) getUserPosts(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	id := ps.ByName("id")
-	userId, err := strconv.Atoi(id)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, http.StatusText(400), 400)
-		return
-	}
-
-	posts, err := env.db.GetUserPosts(userId)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, http.StatusText(500), 500)
-		return
-	}
-
-	respData, err_ := json.Marshal(posts)
-	if err_ != nil {
-		log.Println(err)
-		http.Error(w, http.StatusText(500), 500)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(200)
-	w.Write(respData)
-}
-
-func (env *Env) updatePostPublishedStatus(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	id := ps.ByName("id")
-	postId, err := strconv.Atoi(id)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, http.StatusText(400), 400)
-		return
-	}
-
-	var post models.Post
-	err = json.NewDecoder(r.Body).Decode(&post)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, http.StatusText(400), 400)
-		return
-	}
-
-	err = env.db.UpdatePostPublishedStatus(postId, post.Published)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, http.StatusText(500), 500)
-		return
-	}
-
-	resp := Response{"Post successfully updated"}
-	respData, err_ := json.Marshal(resp)
-	if err_ != nil {
-		log.Println(err)
-		http.Error(w, http.StatusText(500), 500)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(200)
-	w.Write(respData)
 }

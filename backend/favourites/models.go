@@ -1,4 +1,4 @@
-package models
+package favourites
 
 type Favourite struct {
 	postId int

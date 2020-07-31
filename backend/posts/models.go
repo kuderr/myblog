@@ -1,6 +1,7 @@
-package models
+package posts
 
 import (
+	"backend/config"
 	"database/sql"
 	"time"
 )
@@ -16,8 +17,8 @@ type Post struct {
 	AuthorId    int       `json:"authorId"`
 }
 
-func (db *DB) AllPostsShorten() ([]Post, error) {
-	rows, err := db.Query(`SELECT id, title, summary, date_created 
+func allPostsShorten() ([]Post, error) {
+	rows, err := config.DB.Query(`SELECT id, title, summary, date_created 
 												 FROM posts 
 												 WHERE published = true
 												 ORDER BY date_created DESC`)
@@ -44,8 +45,8 @@ func (db *DB) AllPostsShorten() ([]Post, error) {
 	return posts, nil
 }
 
-func (db *DB) AddPost(post *Post) (int, error) {
-	row := db.QueryRow(`INSERT INTO posts (title, summary, body, author_id, published) 
+func addPost(post *Post) (int, error) {
+	row := config.DB.QueryRow(`INSERT INTO posts (title, summary, body, author_id, published) 
 										 VALUES ($1, $2, $3, $4, $5)
 										 RETURNING id`,
 		post.Title, post.Summary, post.Body, post.AuthorId, post.Published)
@@ -59,8 +60,8 @@ func (db *DB) AddPost(post *Post) (int, error) {
 	return lastInsertId, nil
 }
 
-func (db *DB) GetPostData(postId int) (Post, error) {
-	row := db.QueryRow("SELECT * FROM posts WHERE id = $1", postId)
+func getPostData(postId int) (Post, error) {
+	row := config.DB.QueryRow("SELECT * FROM posts WHERE id = $1", postId)
 	var post Post
 	err := row.Scan(&post.ID, &post.Title, &post.Summary, &post.Body, &post.DateCreated, &post.DateUpdated, &post.AuthorId, &post.Published)
 	switch {
@@ -73,8 +74,8 @@ func (db *DB) GetPostData(postId int) (Post, error) {
 	return post, nil
 }
 
-func (db *DB) GetUserPosts(userId int) ([]Post, error) {
-	rows, err := db.Query(`SELECT id, title, summary, date_created
+func getUserPosts(userId int) ([]Post, error) {
+	rows, err := config.DB.Query(`SELECT id, title, summary, date_created
 												 FROM posts 
 												 WHERE author_id = $1
 												 ORDER BY date_created DESC`, userId)
@@ -101,8 +102,8 @@ func (db *DB) GetUserPosts(userId int) ([]Post, error) {
 	return posts, nil
 }
 
-func (db *DB) UpdatePostPublishedStatus(postId int, published bool) error {
-	_, err := db.Exec("UPDATE posts SET published = $1 WHERE id = $2", published, postId)
+func updatePostPublishedStatus(postId int, published bool) error {
+	_, err := config.DB.Exec("UPDATE posts SET published = $1 WHERE id = $2", published, postId)
 	if err != nil {
 		return err
 	}
@@ -110,8 +111,8 @@ func (db *DB) UpdatePostPublishedStatus(postId int, published bool) error {
 	return nil
 }
 
-func (db *DB) DeletePost(postId int) error {
-	_, err := db.Exec("DELETE FROM posts WHERE id = $1", postId)
+func deletePost(postId int) error {
+	_, err := config.DB.Exec("DELETE FROM posts WHERE id = $1", postId)
 	if err != nil {
 		return err
 	}
@@ -119,8 +120,8 @@ func (db *DB) DeletePost(postId int) error {
 	return nil
 }
 
-func (db *DB) UpdatePost(postId int, post *Post) error {
-	_, err := db.Exec(`UPDATE posts SET title = $1, summary = $2, body = $3, date_updated = $4
+func updatePost(postId int, post *Post) error {
+	_, err := config.DB.Exec(`UPDATE posts SET title = $1, summary = $2, body = $3, date_updated = $4
 										WHERE id = $5`,
 		post.Title, post.Summary, post.Body, time.Now(), postId)
 	if err != nil {
