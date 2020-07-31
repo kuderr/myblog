@@ -6,8 +6,8 @@
           <v-col cols="12" md="4">
             <v-text-field
               v-model.trim="post.title"
-              :rules="[(v) => !!v || 'Title is required',
-          v => v.length <= 50 || 'Title must be less than 50 characters']"
+              :rules="[v => !!v || 'Title is required',
+                       v => v.length <= 50 || 'Title must be less than 50 characters']"
               :counter="50"
               label="Title"
               required
@@ -18,8 +18,8 @@
             <v-textarea
               v-model.trim="post.summary"
               :counter="255"
-              :rules="[(v) => !!v || 'Summary is required',
-                    v => v.length <= 255 || 'Summary must be less than 255 characters']"
+              :rules="[v => !!v || 'Summary is required',
+                       v => v.length <= 255 || 'Summary must be less than 255 characters']"
               label="Summary"
               required
               auto-grow
@@ -31,11 +31,26 @@
           <tiptap-vuetify
             v-model="post.body"
             :extensions="extensions"
-            placeholder="Текст поста"
+            @keyup.meta.s.prevent="updatePost()"
+            @keyup.ctrl.s.prevent="updatePost()"
             :toolbar-attributes="{ color: 'black', dark: true }"
+            placeholder="Текст поста"
           />
           <template>
-            <v-btn class="mt-3" block color="secondary" @click="updatePost()">Сохранить</v-btn>
+            <v-tooltip right>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  class="mt-4"
+                  v-bind="attrs"
+                  v-on="on"
+                  block
+                  color="secondary"
+                  :loading="saveLoader"
+                  @click="updatePost()"
+                >Сохранить</v-btn>
+              </template>
+              <span>Ctrl+S (Cmd+S)</span>
+            </v-tooltip>
             <v-btn
               class="mt-1"
               block
@@ -90,6 +105,9 @@ import { getPost, updatePost, updatePublishedStatus, deletePost } from "../api";
   },
 })
 export default class Editor extends Vue {
+  // loaders
+  private saveLoader: boolean = false;
+  // form data
   private valid: boolean = false;
   private postId: string;
   private post: {
@@ -117,8 +135,11 @@ export default class Editor extends Vue {
 
   private async updatePost() {
     if (this.$refs.form.validate()) {
-      console.log(this.post);
+      this.saveLoader = true;
       await updatePost(this.post);
+      let images = this.post.body.match(/"data:image[^ >]*/g);
+      console.log(images);
+      this.saveLoader = false;
     }
   }
 
@@ -127,8 +148,8 @@ export default class Editor extends Vue {
     updatePublishedStatus(this.postId, this.post.published);
   }
 
-  private deletePost(): void {
-    deletePost(this.postId);
+  private async deletePost() {
+    await deletePost(this.postId);
     this.$router.push("/your-posts");
   }
 
@@ -170,6 +191,7 @@ export default class Editor extends Vue {
 }
 img {
   max-width: 100%;
+  padding: 5px 0;
   display: block;
   margin-left: auto;
   margin-right: auto;

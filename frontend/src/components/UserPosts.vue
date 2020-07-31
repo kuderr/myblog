@@ -37,7 +37,7 @@ export default class UserPosts extends Vue {
 
   async newPost() {
     let res = await addPost(this.post);
-    this.posts.push(res.data);
+    this.$router.push("/editor/" + res.data.postId);
   }
 
   async created() {
