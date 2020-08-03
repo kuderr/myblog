@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex flex-wrap mb-6 justify-center">
-    <v-btn class="mt-3" block color="success" @click="newPost()">Новый пост</v-btn>
+    <v-btn class="mb-4" block color="success" @click="newPost()">Новый пост</v-btn>
     <v-card
       v-for="post in posts"
       :key="post.id"

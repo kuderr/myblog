@@ -189,11 +189,57 @@ export default class Editor extends Vue {
   margin-left: auto;
   margin-right: auto;
 }
-img {
+img:not(.avatar) {
   max-width: 100%;
   padding: 5px 0;
   display: block;
   margin-left: auto;
   margin-right: auto;
+}
+
+ul,
+ol {
+  margin-bottom: 10px;
+}
+
+h1 {
+  margin-top: 30px !important;
+}
+h2 {
+  margin-top: 20px !important;
+}
+h3 {
+  margin-top: 10px !important;
+}
+
+blockquote {
+  border-left: 0.25em solid #dfe2e5;
+  color: #6a737d;
+  padding-left: 1em;
+  margin: 20px 0 !important;
+}
+
+code {
+  padding: 0 4px !important;
+  margin: 0 5px !important;
+  background-color: black;
+  color: white;
+}
+
+pre code {
+  padding: 8px !important;
+  margin: 0 5px !important;
+}
+
+code:before,
+code:after {
+  content: none !important;
+  letter-spacing: initial !important;
+}
+
+p {
+  margin-top: 5px !important;
+  margin-bottom: 5px !important;
+  min-height: 1rem;
 }
 </style>

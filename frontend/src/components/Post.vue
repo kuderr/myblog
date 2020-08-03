@@ -4,12 +4,9 @@
       <v-flex xs12 sm10 md8>
         <v-card class="mx-auto">
           <v-img height="200px" :src="post.img"></v-img>
-          <v-card-title class="headline font-weight-bold">
-            <strong class="blue--text text--lighten-2">{{post.title}}</strong>
-          </v-card-title>
-
+          <v-card-title class="headline font-weight-bold">{{post.title}}</v-card-title>
           <v-card-text class="text--primary">
-            <div v-html="post.body"></div>
+            <div class="body-1" v-html="post.body"></div>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -44,8 +41,9 @@ export default class Post extends Vue {
   margin-left: auto;
   margin-right: auto;
 }
-img {
+img:not(.avatar) {
   max-width: 100%;
+  padding: 5px 0;
   display: block;
   margin-left: auto;
   margin-right: auto;

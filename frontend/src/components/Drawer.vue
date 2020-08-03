@@ -1,6 +1,6 @@
 <template>
   <div id="drawer">
-    <v-app-bar app clipped-left dark>
+    <v-app-bar app clipped-left dark dense flat>
       <v-app-bar-nav-icon @click.stop="switchDrawer()" />
       <v-toolbar-title>Kuder Blog</v-toolbar-title>
     </v-app-bar>
@@ -9,7 +9,7 @@
       <v-list dense nav class="py-0">
         <v-list-item two-line :class="miniVariant && 'px-0'">
           <v-list-item-avatar>
-            <img :src="user.avatar" />
+            <img class="avatar" :src="user.avatar" />
           </v-list-item-avatar>
 
           <v-list-item-content>
