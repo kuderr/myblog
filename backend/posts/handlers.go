@@ -9,15 +9,6 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-type Response struct {
-	Msg string `json:"msg"`
-}
-
-type ResponsePost struct {
-	Msg    string `json:"msg"`
-	PostId int    `json:"postId"`
-}
-
 func AddPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var post Post
 	err := json.NewDecoder(r.Body).Decode(&post)
@@ -35,16 +26,10 @@ func AddPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	}
 
 	resp := ResponsePost{"Post successfully created", postId}
-	respData, err_ := json.Marshal(resp)
-	if err_ != nil {
-		log.Println(err)
+	err = sendData(w, 201, resp)
+	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
-		return
 	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(201)
-	w.Write(respData)
 }
 
 func GetPosts(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -53,15 +38,10 @@ func GetPosts(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		http.Error(w, http.StatusText(500), 500)
 	}
 
-	respData, err_ := json.Marshal(posts)
-	if err_ != nil {
+	err = sendData(w, 200, posts)
+	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
-		return
 	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(200)
-	w.Write(respData)
 }
 
 func GetPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -80,16 +60,10 @@ func GetPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		return
 	}
 
-	respData, err_ := json.Marshal(post)
-	if err_ != nil {
-		log.Println(err)
+	err = sendData(w, 200, post)
+	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
-		return
 	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(200)
-	w.Write(respData)
 }
 
 func UpdatePost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -117,17 +91,10 @@ func UpdatePost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	resp := Response{"Post successfully updated"}
-	respData, err_ := json.Marshal(resp)
-	if err_ != nil {
-		log.Println(err)
+	err = sendData(w, 200, resp)
+	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
-		return
 	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(200)
-	w.Write(respData)
-
 }
 
 func DeletePost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -147,16 +114,10 @@ func DeletePost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	resp := Response{"Post successfully deleted"}
-	respData, err_ := json.Marshal(resp)
-	if err_ != nil {
-		log.Println(err)
+	err = sendData(w, 200, resp)
+	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
-		return
 	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(200)
-	w.Write(respData)
 }
 
 func GetUserPosts(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -175,16 +136,10 @@ func GetUserPosts(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 		return
 	}
 
-	respData, err_ := json.Marshal(posts)
-	if err_ != nil {
-		log.Println(err)
+	err = sendData(w, 200, posts)
+	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
-		return
 	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(200)
-	w.Write(respData)
 }
 
 func UpdatePostPublishedStatus(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -212,14 +167,8 @@ func UpdatePostPublishedStatus(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	resp := Response{"Post successfully updated"}
-	respData, err_ := json.Marshal(resp)
-	if err_ != nil {
-		log.Println(err)
+	err = sendData(w, 200, resp)
+	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
-		return
 	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(200)
-	w.Write(respData)
 }
