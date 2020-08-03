@@ -14,7 +14,8 @@ func AddPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	err := json.NewDecoder(r.Body).Decode(&post)
 	if err != nil {
 		log.Println(err)
-		http.Error(w, http.StatusText(400), 400)
+		resp := ErrorResponse{"Invalid post data"}
+		sendError(w, resp, 400)
 		return
 	}
 
@@ -26,7 +27,7 @@ func AddPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	}
 
 	resp := ResponsePost{"Post successfully created", postId}
-	err = sendData(w, 201, resp)
+	err = sendData(w, resp, 201)
 	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
 	}
@@ -38,7 +39,7 @@ func GetPosts(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		http.Error(w, http.StatusText(500), 500)
 	}
 
-	err = sendData(w, 200, posts)
+	err = sendData(w, posts, 200)
 	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
 	}
@@ -49,7 +50,8 @@ func GetPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	postId, err := strconv.Atoi(id)
 	if err != nil {
 		log.Println(err)
-		http.Error(w, http.StatusText(400), 400)
+		resp := ErrorResponse{"Invalid id provided"}
+		sendError(w, resp, 400)
 		return
 	}
 
@@ -60,7 +62,7 @@ func GetPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		return
 	}
 
-	err = sendData(w, 200, post)
+	err = sendData(w, post, 200)
 	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
 	}
@@ -71,7 +73,8 @@ func UpdatePost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	postId, err := strconv.Atoi(id)
 	if err != nil {
 		log.Println(err)
-		http.Error(w, http.StatusText(400), 400)
+		resp := ErrorResponse{"Invalid id provided"}
+		sendError(w, resp, 400)
 		return
 	}
 
@@ -79,7 +82,8 @@ func UpdatePost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	err = json.NewDecoder(r.Body).Decode(&post)
 	if err != nil {
 		log.Println(err)
-		http.Error(w, http.StatusText(400), 400)
+		resp := ErrorResponse{"Invalid post data"}
+		sendError(w, resp, 400)
 		return
 	}
 
@@ -91,7 +95,7 @@ func UpdatePost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	resp := Response{"Post successfully updated"}
-	err = sendData(w, 200, resp)
+	err = sendData(w, resp, 200)
 	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
 	}
@@ -102,19 +106,21 @@ func DeletePost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	postId, err := strconv.Atoi(id)
 	if err != nil {
 		log.Println(err)
-		http.Error(w, http.StatusText(400), 400)
+		resp := ErrorResponse{"Invalid id provided"}
+		sendError(w, resp, 400)
 		return
 	}
 
 	err = deletePost(postId)
 	if err != nil {
 		log.Println(err)
+		//  TODO: what type of error ?
 		http.Error(w, http.StatusText(400), 400)
 		return
 	}
 
 	resp := Response{"Post successfully deleted"}
-	err = sendData(w, 200, resp)
+	err = sendData(w, resp, 200)
 	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
 	}
@@ -125,7 +131,8 @@ func GetUserPosts(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	userId, err := strconv.Atoi(id)
 	if err != nil {
 		log.Println(err)
-		http.Error(w, http.StatusText(400), 400)
+		resp := ErrorResponse{"Invalid id provided"}
+		sendError(w, resp, 400)
 		return
 	}
 
@@ -136,7 +143,7 @@ func GetUserPosts(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 		return
 	}
 
-	err = sendData(w, 200, posts)
+	err = sendData(w, posts, 200)
 	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
 	}
@@ -147,7 +154,8 @@ func UpdatePostPublishedStatus(w http.ResponseWriter, r *http.Request, ps httpro
 	postId, err := strconv.Atoi(id)
 	if err != nil {
 		log.Println(err)
-		http.Error(w, http.StatusText(400), 400)
+		resp := ErrorResponse{"Invalid id provided"}
+		sendError(w, resp, 400)
 		return
 	}
 
@@ -155,7 +163,8 @@ func UpdatePostPublishedStatus(w http.ResponseWriter, r *http.Request, ps httpro
 	err = json.NewDecoder(r.Body).Decode(&post)
 	if err != nil {
 		log.Println(err)
-		http.Error(w, http.StatusText(400), 400)
+		resp := ErrorResponse{"Invalid post data"}
+		sendError(w, resp, 400)
 		return
 	}
 
@@ -167,7 +176,7 @@ func UpdatePostPublishedStatus(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	resp := Response{"Post successfully updated"}
-	err = sendData(w, 200, resp)
+	err = sendData(w, resp, 200)
 	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
 	}
