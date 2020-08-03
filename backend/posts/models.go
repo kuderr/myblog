@@ -17,7 +17,14 @@ type Post struct {
 	AuthorId    int       `json:"authorId"`
 }
 
-func allPostsShorten() ([]Post, error) {
+type PostShorten struct {
+	ID          int       `json:"id"`
+	Title       string    `json:"title"`
+	Summary     string    `json:"summary"`
+	DateCreated time.Time `json:"dateCreated"`
+}
+
+func allPostsShorten() ([]PostShorten, error) {
 	rows, err := config.DB.Query(`SELECT id, title, summary, date_created 
 												 FROM posts 
 												 WHERE published = true
@@ -27,9 +34,9 @@ func allPostsShorten() ([]Post, error) {
 	}
 	defer rows.Close()
 
-	posts := []Post{}
+	posts := []PostShorten{}
 	for rows.Next() {
-		post := Post{}
+		post := PostShorten{}
 		err := rows.Scan(&post.ID, &post.Title, &post.Summary, &post.DateCreated)
 		if err != nil {
 			return nil, err
