@@ -1,17 +1,17 @@
 import Vue from "vue";
-import Vuex from "vuex";
+import Vuex, { StoreOptions } from "vuex";
+import { RootState } from "./types";
+import { posts } from "./posts";
 
 Vue.use(Vuex);
 
-const state = {};
-const mutations = {};
-const actions = {};
-const getters = {};
+const store: StoreOptions<RootState> = {
+  state: {
+    version: "1.0.0", // a simple property
+  },
+  modules: {
+    posts,
+  },
+};
 
-export default new Vuex.Store({
-  modules: {},
-  state,
-  mutations,
-  actions,
-  getters,
-});
+export default new Vuex.Store<RootState>(store);
