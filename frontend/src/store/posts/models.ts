@@ -1,4 +1,4 @@
-export interface Post {
+export class Post {
   title: string;
   summary: string;
   body: string;
@@ -9,9 +9,11 @@ export interface Post {
   id?: number;
   color?: string;
   img?: string;
-}
 
-export interface PostsState {
-  posts?: Post[];
-  error: boolean;
+  constructor() {
+    this.title = "";
+    this.summary = "";
+    this.body = "";
+    this.authorId = 1;
+  }
 }

@@ -1,17 +1,15 @@
 import Vue from "vue";
-import Vuex, { StoreOptions } from "vuex";
-import { RootState } from "./types";
-import { posts } from "./posts";
+import Vuex from "vuex";
+import shared from "./shared";
+import posts from "./posts";
+import user from "./user";
 
 Vue.use(Vuex);
 
-const store: StoreOptions<RootState> = {
-  state: {
-    version: "1.0.0", // a simple property
-  },
+export default new Vuex.Store({
   modules: {
+    shared,
     posts,
+    user,
   },
-};
-
-export default new Vuex.Store<RootState>(store);
+});

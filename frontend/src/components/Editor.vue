@@ -97,7 +97,7 @@ import {
   Image,
 } from "tiptap-vuetify";
 
-import { getPost, updatePost, updatePublishedStatus, deletePost } from "../api";
+import { updatePost } from "../api";
 
 @Component({
   components: {
@@ -109,47 +109,33 @@ export default class Editor extends Vue {
   private saveLoader: boolean = false;
   // form data
   private valid: boolean = false;
-  private postId: string;
-  private post: {
-    title: string;
-    summary: string;
-    body: string;
-    authorId: number;
-    published?: boolean;
-    dateCreated?: string;
-    dateUpdated?: string;
-    id?: number;
-  } = {
-    title: "",
-    summary: "",
-    body: "",
-    authorId: 1,
-  };
 
-  async created() {
-    this.postId = this.$router.currentRoute.params["id"];
-    let res = await getPost(this.postId);
-    this.post = res.data;
-    this.post["img"] = "https://cdn.vuetifyjs.com/images/cards/docks.jpg";
+  mounted() {
+    let postId = this.$router.currentRoute.params["id"];
+    this.$store.dispatch("fetchPost", postId);
   }
 
+  get post() {
+    return this.$store.state.posts.currentPost;
+  }
+
+  // TODO
   private async updatePost() {
     if (this.$refs.form.validate()) {
       this.saveLoader = true;
       await updatePost(this.post);
       let images = this.post.body.match(/"data:image[^ >]*/g);
-      console.log(images);
       this.saveLoader = false;
     }
   }
 
   private switchPublishedStatus(): void {
     this.post.published = !this.post.published;
-    updatePublishedStatus(this.postId, this.post.published);
+    this.$store.dispatch("updatePublishedStatus", this.post);
   }
 
-  private async deletePost() {
-    await deletePost(this.postId);
+  private deletePost() {
+    this.$store.dispatch("deletePost", this.post.id);
     this.$router.push("/your-posts");
   }
 

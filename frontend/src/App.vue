@@ -15,7 +15,7 @@
     </v-fab-transition>
 
     <!-- Ошибки и сообщнеия: -->
-    <!-- <template v-if="error">
+    <template v-if="error">
       <v-snackbar
         :multi-line="true"
         :timeout="3000"
@@ -39,7 +39,7 @@
         {{ message }}
         <v-btn dark text @click="closeMessage">Close</v-btn>
       </v-snackbar>
-    </template>-->
+    </template>
     <!-- ------------------------ -->
   </v-app>
 </template>
@@ -54,6 +54,20 @@ import { Component, Vue } from "vue-property-decorator";
   },
 })
 export default class App extends Vue {
+  get error() {
+    return this.$store.state.shared.error;
+  }
+  closeError() {
+    this.$store.dispatch("clearError");
+  }
+
+  get message() {
+    return this.$store.state.shared.message;
+  }
+  closeMessage() {
+    this.$store.dispatch("clearMessage");
+  }
+
   switchColorMode() {
     this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
     localStorage.darkMode = this.$vuetify.theme.dark;
@@ -61,6 +75,8 @@ export default class App extends Vue {
 
   mounted() {
     this.$vuetify.theme.dark = localStorage.darkMode === "true" ? true : false;
+    this.$store.dispatch("fetchPosts");
+    this.$store.dispatch("fetchUserPosts", 1);
   }
 }
 </script>

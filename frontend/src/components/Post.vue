@@ -3,7 +3,7 @@
     <v-layout align-center justify-center>
       <v-flex xs12 sm10 md8>
         <v-card class="mx-auto">
-          <v-img height="200px" :src="post.img"></v-img>
+          <v-img height="200px" src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"></v-img>
           <v-card-title class="headline font-weight-bold">{{post.title}}</v-card-title>
           <v-card-text class="text--primary">
             <div class="body-1" v-html="post.body"></div>
@@ -17,18 +17,16 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 
-import { getPost } from "../api";
-
 @Component
-export default class Post extends Vue {
-  postId: string;
-  post: object = {};
+export default class PostDetail extends Vue {
+  mounted() {
+    let postId = this.$router.currentRoute.params["id"];
+    this.$store.dispatch("fetchPost", postId);
+  }
 
-  async created() {
-    this.postId = this.$router.currentRoute.params["id"];
-    let res = await getPost(this.postId);
-    this.post = res.data;
-    this.post["img"] = "https://cdn.vuetifyjs.com/images/cards/docks.jpg";
+  get post() {
+    let post = this.$store.state.posts.currentPost;
+    return post;
   }
 }
 </script>
