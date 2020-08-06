@@ -31,3 +31,11 @@ export function updatePublishedStatus(postId, published) {
 export function deletePost(postId) {
   return axios.delete(`${API_URL}/posts/${postId}`);
 }
+
+// tests
+
+const NVR_API_URL = "https://nvr.miem.hse.ru/api";
+
+export function authenticate(userData) {
+  return axios.post(`${NVR_API_URL}/login`, userData);
+}

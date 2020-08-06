@@ -31,8 +31,8 @@
           <tiptap-vuetify
             v-model="post.body"
             :extensions="extensions"
-            @keyup.meta.s.prevent="updatePost()"
-            @keyup.ctrl.s.prevent="updatePost()"
+            @keydown.meta.s.prevent="updatePost()"
+            @keydown.ctrl.s.prevent="updatePost()"
             :toolbar-attributes="{ color: 'black', dark: true }"
             placeholder="Текст поста"
           />

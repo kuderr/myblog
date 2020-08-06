@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
+import { authRequired } from "./authGuard";
 
 Vue.use(VueRouter);
 
@@ -26,12 +27,14 @@ const routes: RouteConfig[] = [
     path: "/your-posts",
     name: "UserPosts",
     meta: { title: "Твои посты" },
+    beforeEnter: authRequired,
     component: () => import("@/views/UserPosts.vue"),
   },
   {
     path: "/editor/:id",
     name: "Editor",
     meta: { title: "Редактор" },
+    beforeEnter: authRequired,
     component: () => import("@/views/Editor.vue"),
   },
   {

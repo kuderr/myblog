@@ -76,7 +76,6 @@ export default class App extends Vue {
   mounted() {
     this.$vuetify.theme.dark = localStorage.darkMode === "true" ? true : false;
     this.$store.dispatch("fetchPosts");
-    this.$store.dispatch("fetchUserPosts", 1);
   }
 }
 </script>

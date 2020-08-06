@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid fill-height>
+  <v-container fluid fill-height class="mt-10">
     <v-layout align-center justify-center>
       <v-flex xs12 sm8 md6>
         <v-card>
@@ -24,7 +24,13 @@
             </v-form>
           </v-card-text>
           <v-card-actions>
-            <v-btn color="black" class="white--text" block @click="onSubmit">Войти</v-btn>
+            <v-btn
+              color="black"
+              class="white--text"
+              block
+              @click="onSubmit"
+              :loading="loading"
+            >Войти</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -40,7 +46,22 @@ export default class Login extends Vue {
   private username: string = "";
   private password: string = "";
 
-  async onSubmit() {}
+  get loading() {
+    return this.$store.state.shared.loading;
+  }
+
+  async onSubmit() {
+    let res = await this.$store.dispatch("login", {
+      email: this.username,
+      password: this.password,
+    });
+
+    if (res) {
+      this.$router.push("/");
+      // TODO userId get
+      this.$store.dispatch("fetchUserPosts", 1);
+    }
+  }
 }
 </script>
 
