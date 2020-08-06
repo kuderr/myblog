@@ -4,8 +4,9 @@ export function isValidToken(token: string) {
   }
 
   const data = JSON.parse(atob(token.split(".")[1]));
-  const exp = new Date(data.exp * 1000);
-  const now = new Date();
+  // const exp = new Date(data.exp * 1000);
+  // const now = new Date();
 
-  return now < exp;
+  // return now < exp;
+  if (data) return true;
 }

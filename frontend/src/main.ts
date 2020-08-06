@@ -12,9 +12,9 @@ Vue.use(TiptapVuetifyPlugin, {
   vuetify,
 });
 
-if (isValidToken(store.state.user.jwt.token)) {
+if (isValidToken(store.state.user.token)) {
   store.dispatch("setDataFromToken").then((res) => {
-    store.dispatch("fetchUserPosts", 1);
+    store.dispatch("fetchUserPosts", res.id);
   });
 }
 

@@ -7,10 +7,10 @@
             <v-form ref="form" validation>
               <v-text-field
                 prepend-icon="person"
-                label="Username"
-                type="username"
+                label="Email"
+                type="email"
                 @keyup.enter="onSubmit"
-                v-model.trim="username"
+                v-model.trim="email"
                 :rules="[v => !!v || 'required']"
               ></v-text-field>
               <v-text-field
@@ -43,7 +43,7 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class Login extends Vue {
-  private username: string = "";
+  private email: string = "";
   private password: string = "";
 
   get loading() {
@@ -52,14 +52,13 @@ export default class Login extends Vue {
 
   async onSubmit() {
     let res = await this.$store.dispatch("login", {
-      email: this.username,
+      email: this.email,
       password: this.password,
     });
 
     if (res) {
       this.$router.push("/");
-      // TODO userId get
-      this.$store.dispatch("fetchUserPosts", 1);
+      this.$store.dispatch("fetchUserPosts", res.id);
     }
   }
 }

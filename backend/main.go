@@ -9,6 +9,7 @@ import (
 
 	"backend/config"
 	"backend/posts"
+	"backend/users"
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
@@ -31,6 +32,8 @@ func main() {
 	router.DELETE("/posts/:id", posts.DeletePost)
 	router.GET("/users/:id/posts", posts.GetUserPosts)
 	router.PATCH("/posts/:id/published", posts.UpdatePostPublishedStatus)
+
+	router.POST("/login", users.Login)
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},

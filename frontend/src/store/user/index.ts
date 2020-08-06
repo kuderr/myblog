@@ -6,17 +6,17 @@ export default {
   state: {
     userPosts: Array<Post>(),
     user: new User(),
-    jwt: { token: localStorage.token || "" },
+    token: localStorage.token || "",
   },
 
   mutations: {
-    setJwtToken(state, payload) {
-      localStorage.token = payload.jwt.token;
-      state.jwt = payload.jwt;
+    setToken(state, payload) {
+      localStorage.token = payload.token;
+      state.token = payload.token;
     },
     clearUserData(state) {
-      state.jwt = "";
-      localStorage.token = "";
+      state.token = "";
+      localStorage.removeItem("token");
     },
 
     userPostsLoaded(state, payload: Post[]) {
@@ -42,10 +42,10 @@ export default {
       try {
         commit("switchLoading");
         let res = await authenticate(userData);
-        commit("setJwtToken", { jwt: res.data });
+        commit("setToken", res.data);
         const tokenParts = res.data.token.split(".");
         const body = JSON.parse(atob(tokenParts[1]));
-        state.user.username = body.sub.username;
+        state.user.username = body.username;
         return body;
       } catch (error) {
         commit("setError", error);
@@ -62,7 +62,7 @@ export default {
         commit("switchLoading");
         const tokenParts = localStorage.token.split(".");
         const body = JSON.parse(atob(tokenParts[1]));
-        state.user.username = body.sub.username;
+        state.user.username = body.username;
         return body;
       } catch (error) {
         commit("setError", error);

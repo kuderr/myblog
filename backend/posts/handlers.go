@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"backend/responses"
+
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -14,8 +16,8 @@ func AddPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	err := json.NewDecoder(r.Body).Decode(&post)
 	if err != nil {
 		log.Println(err)
-		resp := ErrorResponse{"Invalid post data"}
-		sendError(w, resp, 400)
+		resp := responses.ErrorResponse{"Invalid post data"}
+		responses.SendError(w, resp, 400)
 		return
 	}
 
@@ -26,8 +28,8 @@ func AddPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		return
 	}
 
-	resp := ResponsePost{"Post successfully created", postId}
-	err = sendData(w, resp, 201)
+	resp := responses.ResponsePost{"Post successfully created", postId}
+	err = responses.SendData(w, resp, 201)
 	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
 	}
@@ -39,7 +41,7 @@ func GetPosts(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		http.Error(w, http.StatusText(500), 500)
 	}
 
-	err = sendData(w, posts, 200)
+	err = responses.SendData(w, posts, 200)
 	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
 	}
@@ -50,8 +52,8 @@ func GetPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	postId, err := strconv.Atoi(id)
 	if err != nil {
 		log.Println(err)
-		resp := ErrorResponse{"Invalid id provided"}
-		sendError(w, resp, 400)
+		resp := responses.ErrorResponse{"Invalid id provided"}
+		responses.SendError(w, resp, 400)
 		return
 	}
 
@@ -62,7 +64,7 @@ func GetPost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		return
 	}
 
-	err = sendData(w, post, 200)
+	err = responses.SendData(w, post, 200)
 	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
 	}
@@ -73,8 +75,8 @@ func UpdatePost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	postId, err := strconv.Atoi(id)
 	if err != nil {
 		log.Println(err)
-		resp := ErrorResponse{"Invalid id provided"}
-		sendError(w, resp, 400)
+		resp := responses.ErrorResponse{"Invalid id provided"}
+		responses.SendError(w, resp, 400)
 		return
 	}
 
@@ -82,8 +84,8 @@ func UpdatePost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	err = json.NewDecoder(r.Body).Decode(&post)
 	if err != nil {
 		log.Println(err)
-		resp := ErrorResponse{"Invalid post data"}
-		sendError(w, resp, 400)
+		resp := responses.ErrorResponse{"Invalid post data"}
+		responses.SendError(w, resp, 400)
 		return
 	}
 
@@ -94,8 +96,8 @@ func UpdatePost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		return
 	}
 
-	resp := Response{"Post successfully updated"}
-	err = sendData(w, resp, 200)
+	resp := responses.Response{"Post successfully updated"}
+	err = responses.SendData(w, resp, 200)
 	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
 	}
@@ -106,8 +108,8 @@ func DeletePost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	postId, err := strconv.Atoi(id)
 	if err != nil {
 		log.Println(err)
-		resp := ErrorResponse{"Invalid id provided"}
-		sendError(w, resp, 400)
+		resp := responses.ErrorResponse{"Invalid id provided"}
+		responses.SendError(w, resp, 400)
 		return
 	}
 
@@ -119,8 +121,8 @@ func DeletePost(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		return
 	}
 
-	resp := Response{"Post successfully deleted"}
-	err = sendData(w, resp, 200)
+	resp := responses.Response{"Post successfully deleted"}
+	err = responses.SendData(w, resp, 200)
 	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
 	}
@@ -131,8 +133,8 @@ func GetUserPosts(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	userId, err := strconv.Atoi(id)
 	if err != nil {
 		log.Println(err)
-		resp := ErrorResponse{"Invalid id provided"}
-		sendError(w, resp, 400)
+		resp := responses.ErrorResponse{"Invalid id provided"}
+		responses.SendError(w, resp, 400)
 		return
 	}
 
@@ -143,7 +145,7 @@ func GetUserPosts(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 		return
 	}
 
-	err = sendData(w, posts, 200)
+	err = responses.SendData(w, posts, 200)
 	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
 	}
@@ -154,8 +156,8 @@ func UpdatePostPublishedStatus(w http.ResponseWriter, r *http.Request, ps httpro
 	postId, err := strconv.Atoi(id)
 	if err != nil {
 		log.Println(err)
-		resp := ErrorResponse{"Invalid id provided"}
-		sendError(w, resp, 400)
+		resp := responses.ErrorResponse{"Invalid id provided"}
+		responses.SendError(w, resp, 400)
 		return
 	}
 
@@ -163,8 +165,8 @@ func UpdatePostPublishedStatus(w http.ResponseWriter, r *http.Request, ps httpro
 	err = json.NewDecoder(r.Body).Decode(&post)
 	if err != nil {
 		log.Println(err)
-		resp := ErrorResponse{"Invalid post data"}
-		sendError(w, resp, 400)
+		resp := responses.ErrorResponse{"Invalid post data"}
+		responses.SendError(w, resp, 400)
 		return
 	}
 
@@ -175,8 +177,8 @@ func UpdatePostPublishedStatus(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	resp := Response{"Post successfully updated"}
-	err = sendData(w, resp, 200)
+	resp := responses.Response{"Post successfully updated"}
+	err = responses.SendData(w, resp, 200)
 	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
 	}

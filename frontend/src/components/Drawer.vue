@@ -65,7 +65,7 @@ export default class Drawer extends Vue {
   }
 
   get isUserLoggedIn() {
-    return isValidToken(this.$store.state.user.jwt.token);
+    return isValidToken(this.$store.state.user.token);
   }
 
   user = {
@@ -82,7 +82,13 @@ export default class Drawer extends Vue {
 
   logout(): void {
     this.$store.dispatch("logout");
-    this.$router.push("/");
+    console.log(this.$router.currentRoute);
+    if (
+      this.$router.currentRoute.fullPath !== "/" &&
+      this.$router.currentRoute.fullPath !== "/about"
+    ) {
+      this.$router.push("/");
+    }
   }
 }
 </script>

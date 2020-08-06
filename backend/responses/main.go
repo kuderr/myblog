@@ -1,4 +1,4 @@
-package posts
+package responses
 
 import (
 	"encoding/json"
@@ -13,12 +13,17 @@ type Response struct {
 	Msg string `json:"msg"`
 }
 
+type ResponseToken struct {
+	Msg   string `json:"message"`
+	Token string `json:"token"`
+}
+
 type ResponsePost struct {
-	Msg    string `json:"msg"`
+	Msg    string `json:"message"`
 	PostId int    `json:"postId"`
 }
 
-func sendData(w http.ResponseWriter, resp interface{}, statusCode int) error {
+func SendData(w http.ResponseWriter, resp interface{}, statusCode int) error {
 	respData, err := json.Marshal(resp)
 	if err != nil {
 		return err
@@ -31,7 +36,7 @@ func sendData(w http.ResponseWriter, resp interface{}, statusCode int) error {
 	return nil
 }
 
-func sendError(w http.ResponseWriter, resp interface{}, statusCode int) {
+func SendError(w http.ResponseWriter, resp interface{}, statusCode int) {
 	respData, err := json.Marshal(resp)
 	if err != nil {
 		http.Error(w, http.StatusText(400), 400)
