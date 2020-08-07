@@ -1,7 +1,7 @@
 <template>
   <div id="about">
     <v-layout align-center justify-center>
-      <v-flex xs12 sm10 md9>
+      <v-flex xs12 sm10 md8>
         <v-card class="mx-auto">
           <div class="text-center py-3">
             <v-avatar center class="profile" color="grey" size="200">

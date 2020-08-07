@@ -5,6 +5,7 @@ import "backend/config"
 type User struct {
 	ID       int
 	Username string
+	Avatar   string
 	Email    string
 	Password string
 	FullName string
@@ -13,11 +14,12 @@ type User struct {
 }
 
 func login(user *User) (User, error) {
-	row := config.DB.QueryRow(`SELECT id, username, email, password
+	row := config.DB.QueryRow(`SELECT id, username, email, password, avatar, fullname, role
 														 FROM users WHERE email = $1`, user.Email)
 
 	var compareUser User
-	err := row.Scan(&compareUser.ID, &compareUser.Username, &compareUser.Email, &compareUser.Password)
+	err := row.Scan(&compareUser.ID, &compareUser.Username, &compareUser.Email,
+		&compareUser.Password, &compareUser.Avatar, &compareUser.FullName, &compareUser.Role)
 	if err != nil {
 		return compareUser, err
 	}

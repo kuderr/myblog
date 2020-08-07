@@ -1,6 +1,6 @@
 <template>
   <v-layout align-center justify-center>
-    <v-flex xs12 sm10 md9>
+    <v-flex xs12 sm10 md8>
       <v-form ref="form" v-model="valid" :lazy-validation="true">
         <v-row>
           <v-col cols="12" md="4">
@@ -25,6 +25,15 @@
               auto-grow
               rows="1"
             ></v-textarea>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" md="8">
+            <v-text-field v-model.trim="post.img" label="Image URL"></v-text-field>
+          </v-col>
+
+          <v-col cols="12" md="4">
+            <v-text-field v-model.trim="post.color" label="Color"></v-text-field>
           </v-col>
         </v-row>
         <div>
@@ -97,8 +106,6 @@ import {
   Image,
 } from "tiptap-vuetify";
 
-import { updatePost } from "../api";
-
 @Component({
   components: {
     TiptapVuetify,
@@ -119,11 +126,10 @@ export default class Editor extends Vue {
     return this.$store.state.posts.currentPost;
   }
 
-  // TODO
   private async updatePost() {
     if (this.$refs.form.validate()) {
       this.saveLoader = true;
-      await updatePost(this.post);
+      await this.$store.dispatch("updatePost", this.post);
       let images = this.post.body.match(/"data:image[^ >]*/g);
       this.saveLoader = false;
     }
@@ -135,7 +141,7 @@ export default class Editor extends Vue {
   }
 
   private deletePost() {
-    this.$store.dispatch("deletePost", this.post.id);
+    this.$store.dispatch("deletePost", this.post);
     this.$router.push("/your-posts");
   }
 

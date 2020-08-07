@@ -8,16 +8,18 @@
     <v-navigation-drawer v-model="drawer" app clipped dark>
       <v-list dense nav :class="isUserLoggedIn ? 'py-0' : 'py-3'">
         <template v-if="isUserLoggedIn">
-          <v-list-item two-line :class="miniVariant && 'px-0'">
+          <v-list-item two-line class="px-1">
             <v-list-item-avatar>
-              <img class="avatar" :src="user.avatar" />
+              <img v-if="user.avatar" class="avatar" :src="user.avatar" />
+              <v-icon v-else large>account_circle</v-icon>
             </v-list-item-avatar>
 
-            <v-list-item-content>
+            <v-list-item-content class="px-1">
               <v-list-item-title>{{ user.fullName }}</v-list-item-title>
+              <v-list-item-subtitle>{{ user.role }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
-          <v-divider></v-divider>
+          <v-divider class="mb-1"></v-divider>
         </template>
 
         <v-list-item v-for="item in items" :key="item.title" :to="item.path">
@@ -68,12 +70,9 @@ export default class Drawer extends Vue {
     return isValidToken(this.$store.state.user.token);
   }
 
-  user = {
-    fullName: "Dima Kudryavtsev",
-    avatar:
-      "https://avatars0.githubusercontent.com/u/39552217?s=460&u=415aebf4249492578b8b2af663f5e5473c704dd4&v=4",
-  };
-  miniVariant = false;
+  get user() {
+    return this.$store.state.user.user;
+  }
 
   switchDrawer(): void {
     this.drawer = !this.drawer;
@@ -82,7 +81,6 @@ export default class Drawer extends Vue {
 
   logout(): void {
     this.$store.dispatch("logout");
-    console.log(this.$router.currentRoute);
     if (
       this.$router.currentRoute.fullPath !== "/" &&
       this.$router.currentRoute.fullPath !== "/about"

@@ -1,4 +1,11 @@
-import { getUserPosts, addPost, deletePost, authenticate } from "@/api";
+import {
+  getUserPosts,
+  addPost,
+  deletePost,
+  authenticate,
+  updatePost,
+  updatePublishedStatus,
+} from "@/api";
 import { User } from "./models";
 import { Post } from "..posts/models";
 
@@ -22,10 +29,10 @@ export default {
     userPostsLoaded(state, payload: Post[]) {
       state.userPosts = payload;
     },
-    postAdded(state, payload: Post) {
+    userPostAdded(state, payload: Post) {
       state.userPosts.unshift(payload);
     },
-    postDeleted(state, postId: number) {
+    userPostDeleted(state, postId: number) {
       let i: number;
       state.userPosts.forEach((post: Post, index: number) => {
         if (post.id === postId) {
@@ -34,6 +41,14 @@ export default {
         }
       });
       state.userPosts.splice(i, 1);
+    },
+    userPostUpdated(state, payload: Post) {
+      state.userPosts.forEach((post: Post, index: number) => {
+        if (post.id === payload.id) {
+          state.userPosts[index] = payload;
+          return;
+        }
+      });
     },
   },
 
@@ -45,7 +60,7 @@ export default {
         commit("setToken", res.data);
         const tokenParts = res.data.token.split(".");
         const body = JSON.parse(atob(tokenParts[1]));
-        state.user.username = body.username;
+        state.user = body;
         return body;
       } catch (error) {
         commit("setError", error);
@@ -62,7 +77,7 @@ export default {
         commit("switchLoading");
         const tokenParts = localStorage.token.split(".");
         const body = JSON.parse(atob(tokenParts[1]));
-        state.user.username = body.username;
+        state.user = body;
         return body;
       } catch (error) {
         commit("setError", error);
@@ -71,20 +86,30 @@ export default {
         commit("switchLoading");
       }
     },
-
-    async fetchUserPosts({ commit }, userId: number) {
-      let res = await getUserPosts(userId);
+    async fetchUserPosts({ state, commit }, userId: number) {
+      let res = await getUserPosts(userId, state.token);
       commit("userPostsLoaded", res.data);
     },
-    async addPost({ commit }, postData: Post) {
-      let res = await addPost(postData);
+    async addPost({ state, commit }, postData: Post) {
+      let res = await addPost(postData, state.token);
       postData.id = res.data.postId;
-      commit("postAdded", postData);
+      commit("userPostAdded", postData);
       return res;
     },
-    deletePost({ commit }, postId: number) {
-      deletePost(postId);
-      commit("postDeleted", postId);
+    updatePublishedStatus({ state, commit }, post: Post) {
+      updatePublishedStatus(post.id, post.published, state.token);
+      if (post.published === false) commit("postDeleted", post.id);
+      else commit("postAdded", post);
+    },
+    deletePost({ state, commit }, post: Post) {
+      deletePost(post.id, state.token);
+      commit("userPostDeleted", post.id);
+      if (post.published === true) commit("postDeleted", post.id);
+    },
+    updatePost({ state, commit }, post: Post) {
+      updatePost(post, state.token);
+      commit("userPostUpdated", post);
+      if (post.published === true) commit("postUpdated", post);
     },
   },
 };

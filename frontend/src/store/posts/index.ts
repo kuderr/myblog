@@ -1,4 +1,4 @@
-import { getPosts, getPost, updatePublishedStatus } from "@/api";
+import { getPosts, getPost } from "@/api";
 import { Post } from "./models";
 
 export default {
@@ -14,7 +14,10 @@ export default {
     postLoaded(state, payload: Post) {
       state.currentPost = payload;
     },
-    deletePost(state, postId: number) {
+    postAdded(state, post: Post) {
+      state.posts.unshift(post);
+    },
+    postDeleted(state, postId: number) {
       let i: number;
       state.posts.forEach((post: Post, index: number) => {
         if (post.id === postId) {
@@ -25,8 +28,13 @@ export default {
 
       state.posts.splice(i, 1);
     },
-    addPost(state, post: Post) {
-      state.posts.unshift(post);
+    postUpdated(state, payload: Post) {
+      state.posts.forEach((post: Post, index: number) => {
+        if (post.id === payload.id) {
+          state.posts[index] = payload;
+          return;
+        }
+      });
     },
   },
 
@@ -38,11 +46,6 @@ export default {
     async fetchPost({ commit }, postId) {
       let res = await getPost(postId);
       commit("postLoaded", res.data);
-    },
-    updatePublishedStatus({ commit }, post: Post) {
-      updatePublishedStatus(post.id, post.published);
-      if (post.published === false) commit("deletePost", post.id);
-      else commit("addPost", post);
     },
   },
 };

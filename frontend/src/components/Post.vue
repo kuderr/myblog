@@ -3,7 +3,7 @@
     <v-layout align-center justify-center>
       <v-flex xs12 sm10 md8>
         <v-card class="mx-auto">
-          <v-img height="200px" src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"></v-img>
+          <v-img height="200px" :src="post.img"></v-img>
           <v-card-title class="headline font-weight-bold">{{post.title}}</v-card-title>
           <v-card-text class="text--primary">
             <div class="body-1" v-html="post.body"></div>
@@ -25,8 +25,7 @@ export default class PostDetail extends Vue {
   }
 
   get post() {
-    let post = this.$store.state.posts.currentPost;
-    return post;
+    return this.$store.state.posts.currentPost;
   }
 }
 </script>

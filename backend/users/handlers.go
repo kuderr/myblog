@@ -43,6 +43,8 @@ func Login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		"username": compareUser.Username,
 		"email":    compareUser.Email,
 		"fullName": compareUser.FullName,
+		"avatar":   compareUser.Avatar,
+		"role":     compareUser.Role,
 	})
 	tokenString, err := token.SignedString([]byte(os.Getenv("BLOG_TOKEN_SECRET")))
 

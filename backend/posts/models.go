@@ -10,6 +10,8 @@ type Post struct {
 	ID          int       `json:"id"`
 	Title       string    `json:"title"`
 	Summary     string    `json:"summary"`
+	Image       string    `json:"img"`
+	Color       string    `json:"color"`
 	Body        string    `json:"body"`
 	Published   bool      `json:"published"`
 	DateCreated time.Time `json:"dateCreated"`
@@ -22,10 +24,12 @@ type PostShorten struct {
 	Title       string    `json:"title"`
 	Summary     string    `json:"summary"`
 	DateCreated time.Time `json:"dateCreated"`
+	Image       string    `json:"img"`
+	Color       string    `json:"color"`
 }
 
 func allPostsShorten() ([]PostShorten, error) {
-	rows, err := config.DB.Query(`SELECT id, title, summary, date_created 
+	rows, err := config.DB.Query(`SELECT id, title, summary, date_created, image, color
 												 FROM posts 
 												 WHERE published = true
 												 ORDER BY date_created DESC`)
@@ -37,7 +41,8 @@ func allPostsShorten() ([]PostShorten, error) {
 	posts := []PostShorten{}
 	for rows.Next() {
 		post := PostShorten{}
-		err := rows.Scan(&post.ID, &post.Title, &post.Summary, &post.DateCreated)
+		err := rows.Scan(&post.ID, &post.Title, &post.Summary, &post.DateCreated,
+			&post.Image, &post.Color)
 		if err != nil {
 			return nil, err
 		}
@@ -53,10 +58,10 @@ func allPostsShorten() ([]PostShorten, error) {
 }
 
 func addPost(post *Post) (int, error) {
-	row := config.DB.QueryRow(`INSERT INTO posts (title, summary, body, author_id, published) 
-										 VALUES ($1, $2, $3, $4, $5)
+	row := config.DB.QueryRow(`INSERT INTO posts (title, summary, author_id) 
+										 VALUES ($1, $2, $3)
 										 RETURNING id`,
-		post.Title, post.Summary, post.Body, post.AuthorId, post.Published)
+		post.Title, post.Summary, post.AuthorId)
 
 	lastInsertId := 0
 	err := row.Scan(&lastInsertId)
@@ -70,7 +75,9 @@ func addPost(post *Post) (int, error) {
 func getPostData(postId int) (Post, error) {
 	row := config.DB.QueryRow("SELECT * FROM posts WHERE id = $1", postId)
 	var post Post
-	err := row.Scan(&post.ID, &post.Title, &post.Summary, &post.Body, &post.DateCreated, &post.DateUpdated, &post.AuthorId, &post.Published)
+	err := row.Scan(&post.ID, &post.Title, &post.Summary, &post.Body,
+		&post.DateCreated, &post.DateUpdated, &post.AuthorId, &post.Published,
+		&post.Image, &post.Color)
 	switch {
 	case err == sql.ErrNoRows:
 		return post, nil
@@ -82,7 +89,7 @@ func getPostData(postId int) (Post, error) {
 }
 
 func getUserPosts(userId int) ([]Post, error) {
-	rows, err := config.DB.Query(`SELECT id, title, summary, date_created
+	rows, err := config.DB.Query(`SELECT id, title, summary, date_created, image, color
 												 FROM posts 
 												 WHERE author_id = $1
 												 ORDER BY date_created DESC`, userId)
@@ -94,7 +101,8 @@ func getUserPosts(userId int) ([]Post, error) {
 	posts := []Post{}
 	for rows.Next() {
 		post := Post{}
-		err := rows.Scan(&post.ID, &post.Title, &post.Summary, &post.DateCreated)
+		err := rows.Scan(&post.ID, &post.Title, &post.Summary, &post.DateCreated,
+			&post.Image, &post.Color)
 		if err != nil {
 			return nil, err
 		}
@@ -128,9 +136,10 @@ func deletePost(postId int) error {
 }
 
 func updatePost(postId int, post *Post) error {
-	_, err := config.DB.Exec(`UPDATE posts SET title = $1, summary = $2, body = $3, date_updated = $4
-										WHERE id = $5`,
-		post.Title, post.Summary, post.Body, time.Now(), postId)
+	_, err := config.DB.Exec(`UPDATE posts SET title = $1, summary = $2, body = $3, date_updated = $4,
+										image = $5, color = $6
+										WHERE id = $7`,
+		post.Title, post.Summary, post.Body, time.Now(), post.Image, post.Color, postId)
 	if err != nil {
 		return err
 	}

@@ -4,12 +4,12 @@
       v-for="post in posts"
       :key="post.id"
       class="ma-2 align-self-auto"
-      color="#26c6da"
+      :color="post.color"
       dark
       width="400"
       :to="`/posts/${post.id}`"
     >
-      <v-img src="https://cdn.vuetifyjs.com/images/cards/mountain.jpg" height="194"></v-img>
+      <v-img :src="post.img" height="194"></v-img>
 
       <v-card-title>
         <span class="title font-weight-bold">{{ post.title }}</span>

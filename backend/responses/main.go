@@ -2,6 +2,7 @@ package responses
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -46,4 +47,6 @@ func SendError(w http.ResponseWriter, resp interface{}, statusCode int) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 	w.Write(respData)
+
+	log.Printf("Error response %#v", resp)
 }
