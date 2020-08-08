@@ -117,7 +117,7 @@ func TokenAuth(handler httprouter.Handle) httprouter.Handle {
 			Role:     tk.Role,
 		}
 
-		log.Printf("Request from %#v", user)
+		log.Printf("Request from %v", user.Email)
 
 		ctx := context.WithValue(r.Context(), "user", user)
 		r = r.WithContext(ctx)

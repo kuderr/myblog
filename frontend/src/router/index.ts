@@ -1,8 +1,12 @@
 import Vue from "vue";
+import VueMeta from "vue-meta";
 import VueRouter, { RouteConfig } from "vue-router";
 import { authRequired } from "./authGuard";
 
 Vue.use(VueRouter);
+Vue.use(VueMeta, {
+  refreshOnceOnNavigation: true,
+});
 
 const routes: RouteConfig[] = [
   {

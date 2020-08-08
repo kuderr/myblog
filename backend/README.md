@@ -30,7 +30,7 @@ CREATE TABLE posts (
     author_id      integer,
     published      boolean NOT NULL DEFAULT FALSE,
     image          text DEFAULT '',
-    color          varchar(50) DEFAULT '#26c6da'
+    color          varchar(50) DEFAULT '#26c6da',
     CONSTRAINT fk_user
       FOREIGN KEY(author_id) REFERENCES users(id)
 );

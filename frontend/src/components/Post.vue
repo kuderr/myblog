@@ -4,7 +4,12 @@
       <v-flex xs12 sm10 md8>
         <v-card class="mx-auto">
           <v-img height="200px" :src="post.img"></v-img>
-          <v-card-title class="headline font-weight-bold">{{post.title}}</v-card-title>
+          <v-card-title
+            class="headline font-weight-bold d-flex justify-space-between"
+            >{{ post.title }}
+            <time class="dateCreated">{{ postDateFormatted }}</time>
+          </v-card-title>
+
           <v-card-text class="text--primary">
             <div class="body-1" v-html="post.body"></div>
           </v-card-text>
@@ -16,21 +21,77 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { MetaInfo } from "vue-meta";
 
-@Component
+@Component({
+  metaInfo(): MetaInfo {
+    return {
+      meta: [
+        {
+          name: "twitter:url",
+          content: location.origin + "/posts/" + this.post.id,
+        },
+        { name: "twitter:title", content: this.post.title },
+        { name: "twitter:description", content: this.post.summary },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:account_id", content: 1116013591042363392 },
+        { name: "twitter:creator", content: "@kuderrr" },
+        { name: "twitter:site", content: "@kuderrr" },
+        { name: "twitter:image", content: this.post.img },
+        { name: "twitter:image:width", content: 1666 },
+        { name: "twitter:image:height", content: 932 },
+
+        { name: "og:url", content: location.origin + "/posts/" + this.post.id },
+        { name: "og:title", content: this.post.title },
+        { name: "og:type", content: "article" },
+        { name: "og:site_name", content: "Kuder Blog" },
+        { name: "og:locale", content: "ru_RU" },
+        { name: "og:description", content: this.post.summary },
+        { name: "og:image", content: this.post.img },
+        { name: "og:image:width", content: 1666 },
+        { name: "og:image:height", content: 932 },
+
+        { name: "description", content: this.post.summary },
+        { name: "author", content: "Dmitriy Kudryavtsev" },
+        { name: "article:published_time", content: this.post.dateCreated },
+        // { name: "keywords", content: "" }, // place for tags
+      ],
+    };
+  },
+})
 export default class PostDetail extends Vue {
+  private options = {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    // hour: "numeric",
+    // minute: "numeric",
+  };
+
   mounted() {
     let postId = this.$router.currentRoute.params["id"];
     this.$store.dispatch("fetchPost", postId);
   }
 
   get post() {
-    return this.$store.state.posts.currentPost;
+    let post = this.$store.state.posts.currentPost;
+    return post;
+  }
+
+  get postDateFormatted() {
+    let timestamp = Date.parse(this.post.dateCreated);
+    let postDate = new Date(timestamp);
+    return postDate.toLocaleString("ru", this.options);
   }
 }
 </script>
 
-<style lang="scss" >
+<style lang="scss">
+.dateCreated {
+  color: #6a737d;
+  font-weight: 400;
+  font-size: 16px;
+}
 .v-application code {
   background-color: black;
   color: white;
