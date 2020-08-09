@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000";
+// const API_URL = "http://localhost:5000"; // dev
+const API_URL = "https://kuderblog.com/api"; // prod
 
 export function authenticate(userData) {
   return axios.post(`${API_URL}/login`, userData);
