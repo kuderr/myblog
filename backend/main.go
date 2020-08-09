@@ -37,15 +37,16 @@ func main() {
 	config.InitDB(dbUrl)
 
 	router := httprouter.New()
-	router.GET("/posts", posts.GetPosts)
-	router.GET("/posts/:id", posts.GetPost)
-	router.POST("/posts", TokenAuth(posts.AddPost))
-	router.PUT("/posts/:id", TokenAuth(posts.UpdatePost))
-	router.DELETE("/posts/:id", TokenAuth(posts.DeletePost))
-	router.GET("/users/:id/posts", TokenAuth(posts.GetUserPosts))
-	router.PATCH("/posts/:id/published", TokenAuth(posts.UpdatePostPublishedStatus))
 
-	router.POST("/login", users.Login)
+	router.GET("/api/posts", posts.GetPosts)
+	router.GET("/api/posts/:id", posts.GetPost)
+	router.POST("/api/posts", TokenAuth(posts.AddPost))
+	router.PUT("/api/posts/:id", TokenAuth(posts.UpdatePost))
+	router.DELETE("/api/posts/:id", TokenAuth(posts.DeletePost))
+	router.GET("/api/users/:id/posts", TokenAuth(posts.GetUserPosts))
+	router.PATCH("/api/posts/:id/published", TokenAuth(posts.UpdatePostPublishedStatus))
+
+	router.POST("/api/login", users.Login)
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
