@@ -26,6 +26,22 @@ import { MetaInfo } from "vue-meta";
   metaInfo(): MetaInfo {
     return {
       meta: [
+        { name: "description", content: this.post.summary },
+        { name: "author", content: "Dmitriy Kudryavtsev" },
+        { name: "article:published_time", content: this.post.dateCreated },
+        // { name: "keywords", content: "" }, // place for tags
+
+        {
+          property: "og:url",
+          content: location.origin + "/posts/" + this.post.id,
+        },
+        { property: "og:title", content: this.post.title },
+        { property: "og:type", content: "article" },
+        { property: "og:site_name", content: "Kuder Blog" },
+        { property: "og:locale", content: "ru_RU" },
+        { property: "og:description", content: this.post.summary },
+        { property: "og:image", content: this.post.img },
+
         { name: "twitter:card", content: "summary_large_image" },
         {
           name: "twitter:url",
@@ -36,19 +52,6 @@ import { MetaInfo } from "vue-meta";
         { name: "twitter:creator", content: "@kuderrr" },
         { name: "twitter:site", content: "@kuderrr" },
         { name: "twitter:image", content: this.post.img },
-
-        { name: "og:url", content: location.origin + "/posts/" + this.post.id },
-        { name: "og:title", content: this.post.title },
-        { name: "og:type", content: "article" },
-        { name: "og:site_name", content: "Kuder Blog" },
-        { name: "og:locale", content: "ru_RU" },
-        { name: "og:description", content: this.post.summary },
-        { name: "og:image", content: this.post.img },
-
-        { name: "description", content: this.post.summary },
-        { name: "author", content: "Dmitriy Kudryavtsev" },
-        { name: "article:published_time", content: this.post.dateCreated },
-        // { name: "keywords", content: "" }, // place for tags
       ],
     };
   },

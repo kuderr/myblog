@@ -4,9 +4,7 @@ import VueRouter, { RouteConfig } from "vue-router";
 import { authRequired } from "./authGuard";
 
 Vue.use(VueRouter);
-Vue.use(VueMeta, {
-  refreshOnceOnNavigation: true,
-});
+Vue.use(VueMeta);
 
 const routes: RouteConfig[] = [
   {
