@@ -29,7 +29,7 @@ func login(user *User) (User, error) {
 
 func create(email string, password string) error {
 	_, err := config.DB.Exec(`INSERT INTO users (email, password)
-														VALUES ($1, $2, $3)`, email, password)
+														VALUES ($1, $2)`, email, password)
 	if err != nil {
 		return err
 	}
