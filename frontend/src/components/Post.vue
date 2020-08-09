@@ -4,9 +4,8 @@
       <v-flex xs12 sm10 md8>
         <v-card class="mx-auto">
           <v-img height="200px" :src="post.img"></v-img>
-          <v-card-title
-            class="headline font-weight-bold d-flex justify-space-between"
-            >{{ post.title }}
+          <v-card-title class="headline font-weight-bold d-flex justify-space-between">
+            {{ post.title }}
             <time class="dateCreated">{{ postDateFormatted }}</time>
           </v-card-title>
 
@@ -34,12 +33,9 @@ import { MetaInfo } from "vue-meta";
         { name: "twitter:title", content: this.post.title },
         { name: "twitter:description", content: this.post.summary },
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:account_id", content: 1116013591042363392 },
         { name: "twitter:creator", content: "@kuderrr" },
         { name: "twitter:site", content: "@kuderrr" },
         { name: "twitter:image", content: this.post.img },
-        { name: "twitter:image:width", content: 1666 },
-        { name: "twitter:image:height", content: 932 },
 
         { name: "og:url", content: location.origin + "/posts/" + this.post.id },
         { name: "og:title", content: this.post.title },
@@ -48,8 +44,6 @@ import { MetaInfo } from "vue-meta";
         { name: "og:locale", content: "ru_RU" },
         { name: "og:description", content: this.post.summary },
         { name: "og:image", content: this.post.img },
-        { name: "og:image:width", content: 1666 },
-        { name: "og:image:height", content: 932 },
 
         { name: "description", content: this.post.summary },
         { name: "author", content: "Dmitriy Kudryavtsev" },
