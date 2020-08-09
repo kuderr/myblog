@@ -1,6 +1,6 @@
 {
-  "name": "auth-app",
-  "version": "0.1.0",
+  "name": "kuder-blog",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "build": "vue-cli-service build",
