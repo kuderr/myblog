@@ -2,11 +2,11 @@
   <v-app>
     <Drawer />
 
-    <v-content>
+    <v-main>
       <v-container fluid>
         <router-view></router-view>
       </v-container>
-    </v-content>
+    </v-main>
 
     <v-fab-transition>
       <v-btn small fab fixed bottom right @click="switchColorMode()">

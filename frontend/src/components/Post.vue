@@ -26,13 +26,13 @@ import { MetaInfo } from "vue-meta";
   metaInfo(): MetaInfo {
     return {
       meta: [
+        { name: "twitter:card", content: "summary_large_image" },
         {
           name: "twitter:url",
           content: location.origin + "/posts/" + this.post.id,
         },
         { name: "twitter:title", content: this.post.title },
         { name: "twitter:description", content: this.post.summary },
-        { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:creator", content: "@kuderrr" },
         { name: "twitter:site", content: "@kuderrr" },
         { name: "twitter:image", content: this.post.img },
