@@ -48,7 +48,7 @@ function createMetaTags() {
     { name: "twitter:image", content: post.img },
   ];
 
-  for (let tag of metaTags) {
+  for (let tag of metaTags.reverse()) {
     var meta = document.createElement("meta");
     meta.name = tag.name;
     meta.content = tag.content;
