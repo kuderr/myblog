@@ -1,10 +1,8 @@
 import Vue from "vue";
-import VueMeta from "vue-meta";
 import VueRouter, { RouteConfig } from "vue-router";
-import { authRequired } from "./authGuard";
+import { authRequired, fetchMeta } from "./utils";
 
 Vue.use(VueRouter);
-Vue.use(VueMeta);
 
 const routes: RouteConfig[] = [
   {
@@ -23,6 +21,7 @@ const routes: RouteConfig[] = [
     path: "/posts/:id",
     name: "Post",
     meta: { title: "Пост" },
+    beforeEnter: fetchMeta,
     component: () => import("@/views/Post.vue"),
   },
   {

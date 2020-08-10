@@ -20,42 +20,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { MetaInfo } from "vue-meta";
 
-@Component({
-  metaInfo(): MetaInfo {
-    return {
-      meta: [
-        { name: "description", content: this.post.summary },
-        { name: "author", content: "Dmitriy Kudryavtsev" },
-        { name: "article:published_time", content: this.post.dateCreated },
-        // { name: "keywords", content: "" }, // place for tags
-
-        {
-          name: "og:url",
-          content: location.origin + "/posts/" + this.post.id,
-        },
-        { name: "og:title", content: this.post.title },
-        { name: "og:type", content: "article" },
-        { name: "og:site_name", content: "Kuder Blog" },
-        { name: "og:locale", content: "ru_RU" },
-        { name: "og:description", content: this.post.summary },
-        { name: "og:image", content: this.post.img },
-
-        // { name: "twitter:card", content: "summary_large_image" },
-        {
-          name: "twitter:url",
-          content: location.origin + "/posts/" + this.post.id,
-        },
-        { name: "twitter:title", content: this.post.title },
-        { name: "twitter:description", content: this.post.summary },
-        { name: "twitter:creator", content: "@kuderrr" },
-        { name: "twitter:site", content: "@kuderrr" },
-        { name: "twitter:image", content: this.post.img },
-      ],
-    };
-  },
-})
+@Component
 export default class PostDetail extends Vue {
   private options = {
     year: "numeric",
@@ -64,11 +30,6 @@ export default class PostDetail extends Vue {
     // hour: "numeric",
     // minute: "numeric",
   };
-
-  mounted() {
-    let postId = this.$router.currentRoute.params["id"];
-    this.$store.dispatch("fetchPost", postId);
-  }
 
   get post() {
     let post = this.$store.state.posts.currentPost;
