@@ -37,6 +37,7 @@ function createMetaTags() {
     { name: "og:image", content: post.img },
 
     { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:image", content: post.img },
     {
       name: "twitter:url",
       content: location.origin + "/posts/" + post.id,
@@ -45,8 +46,13 @@ function createMetaTags() {
     { name: "twitter:description", content: post.summary },
     { name: "twitter:creator", content: "@kuderrr" },
     { name: "twitter:site", content: "@kuderrr" },
-    { name: "twitter:image", content: post.img },
   ];
+
+  for (let tag of metaTags) {
+    (
+      document.querySelector(`[name='${tag.name}']`) || { remove: () => 0 }
+    ).remove();
+  }
 
   for (let tag of metaTags.reverse()) {
     var meta = document.createElement("meta");
