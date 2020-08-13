@@ -54,10 +54,10 @@ function createMetaTags() {
     ).remove();
   }
 
-  for (let tag of metaTags.reverse()) {
+  for (let tag of metaTags) {
     var meta = document.createElement("meta");
     meta.name = tag.name;
     meta.content = tag.content;
-    document.head.prepend(meta);
+    document.head.append(meta);
   }
 }
