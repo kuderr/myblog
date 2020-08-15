@@ -24,13 +24,13 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-
-@Component
-export default class Home extends Vue {
-  get posts() {
-    return this.$store.state.posts.posts;
-  }
+<script>
+export default {
+  name: 'Home',
+  computed: {
+    posts() {
+      return this.$store.state.posts.posts
+    },
+  },
 }
 </script>

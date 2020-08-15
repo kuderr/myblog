@@ -2,11 +2,11 @@
   <v-app>
     <Drawer />
 
-    <v-content>
+    <v-main>
       <v-container fluid>
-        <router-view></router-view>
+        <nuxt />
       </v-container>
-    </v-content>
+    </v-main>
 
     <v-fab-transition>
       <v-btn small fab fixed bottom right @click="switchColorMode()">
@@ -44,39 +44,48 @@
   </v-app>
 </template>
 
-<script lang="ts">
-import Drawer from "@/components/Drawer.vue";
-import { Component, Vue } from "vue-property-decorator";
+<script>
+import Drawer from '@/components/Drawer.vue'
+import { isValidToken } from '@/utils'
 
-@Component({
+export default {
+  name: 'Main',
   components: {
     Drawer,
   },
-})
-export default class App extends Vue {
-  get error() {
-    return this.$store.state.shared.error;
-  }
-  closeError() {
-    this.$store.dispatch("clearError");
-  }
+  async mounted() {
+    this.$vuetify.theme.dark = localStorage.darkMode === 'true' ? true : false
+    await this.$store.dispatch('fetchPosts')
+    const token = localStorage.token || ''
+    if (token) {
+      let res = await this.$store.dispatch('setDataFromToken', token)
+      this.$store.dispatch('fetchUserPosts', res.id)
+    }
+  },
+  computed: {
+    error() {
+      return this.$store.state.shared.error
+    },
+    message() {
+      return this.$store.state.shared.message
+    },
+  },
+  methods: {
+    closeError() {
+      this.$store.dispatch('clearError')
+    },
 
-  get message() {
-    return this.$store.state.shared.message;
-  }
-  closeMessage() {
-    this.$store.dispatch("clearMessage");
-  }
+    closeMessage() {
+      this.$store.dispatch('clearMessage')
+    },
 
-  switchColorMode() {
-    this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
-    localStorage.darkMode = this.$vuetify.theme.dark;
-  }
-
-  mounted() {
-    this.$vuetify.theme.dark = localStorage.darkMode === "true" ? true : false;
-    this.$store.dispatch("fetchPosts");
-  }
+    switchColorMode() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark
+      if (process.browser) {
+        localStorage.darkMode = this.$vuetify.theme.dark
+      }
+    },
+  },
 }
 </script>
 

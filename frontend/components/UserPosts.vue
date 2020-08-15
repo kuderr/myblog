@@ -21,28 +21,32 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-
-@Component
-export default class UserPosts extends Vue {
-  post = {
-    title: "Новый пост",
-    summary: "Новый пост",
-    authorId: this.user.id,
-  };
-
-  get user() {
-    return this.$store.state.user.user;
-  }
-
-  async newPost() {
-    let res = await this.$store.dispatch("addPost", this.post);
-    this.$router.push("/editor/" + res.data.postId);
-  }
-
-  get posts() {
-    return this.$store.state.user.userPosts;
-  }
+<script>
+export default {
+  name: 'UserPosts',
+  middleware: 'authenticated',
+  data() {
+    return {
+      post: {
+        title: 'Новый пост',
+        summary: 'Новый пост',
+        authorId: this.$store.state.user.user.id,
+      },
+    }
+  },
+  computed: {
+    user() {
+      return this.$store.state.user.user
+    },
+    posts() {
+      return this.$store.state.user.userPosts
+    },
+  },
+  methods: {
+    async newPost() {
+      let res = await this.$store.dispatch('addPost', this.post)
+      this.$router.push('/editor/' + res.data.postId)
+    },
+  },
 }
 </script>

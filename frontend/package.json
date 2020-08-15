@@ -1,63 +1,30 @@
 {
-  "name": "kuder-blog",
+  "name": "frontend",
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "serve": "vue-cli-service serve"
+    "dev": "nuxt-ts --port 8080",
+    "build": "nuxt-ts build",
+    "start": "nuxt-ts start",
+    "generate": "nuxt-ts generate"
   },
   "dependencies": {
-    "axios": "^0.19.2",
-    "core-js": "^3.6.4",
+    "@nuxt/typescript-runtime": "^1.0.0",
+    "@nuxtjs/auth": "^4.9.1",
+    "@nuxtjs/axios": "^5.12.1",
+    "nuxt": "^2.14.0",
+    "nuxt-material-design-icons": "^1.0.4",
     "tiptap-vuetify": "^2.24.0",
-    "vue": "^2.6.11",
-    "vue-class-component": "^7.2.3",
-    "vue-property-decorator": "^8.4.2",
-    "vue-router": "^3.1.5",
-    "vuetify": "^2.2.11",
-    "vuex": "^3.1.2"
+    "vue-class-component": "^7.2.5",
+    "vue-property-decorator": "^9.0.0"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^2.18.0",
-    "@typescript-eslint/parser": "^2.18.0",
-    "@vue/cli-plugin-babel": "~4.2.0",
-    "@vue/cli-plugin-eslint": "~4.2.0",
-    "@vue/cli-plugin-router": "^4.2.3",
-    "@vue/cli-plugin-typescript": "^4.4.6",
-    "@vue/cli-plugin-vuex": "^4.2.3",
-    "@vue/cli-service": "~4.2.0",
-    "@vue/eslint-config-typescript": "^5.0.1",
-    "babel-eslint": "^10.0.3",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.1.2",
-    "material-design-icons-iconfont": "^5.0.1",
-    "sass": "^1.19.0",
-    "sass-loader": "^8.0.0",
-    "typescript": "~3.9.3",
-    "vue-cli-plugin-vuetify": "~2.0.5",
-    "vue-template-compiler": "^2.6.11",
-    "vuetify-loader": "^1.3.0"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended",
-      "@vue/typescript"
-    ],
-    "parserOptions": {
-      "parser": "@typescript-eslint/parser"
-    },
-    "rules": {
-      "no-unused-vars": "off"
-    }
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions"
-  ]
+    "@nuxt/types": "^2.14.0",
+    "@nuxt/typescript-build": "^2.0.2",
+    "@nuxtjs/router": "^1.5.0",
+    "@nuxtjs/vuetify": "^1.11.2",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "^2.0.5"
+  }
 }

@@ -41,52 +41,61 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import { isValidToken } from "../utils";
+<script>
+import { isValidToken } from '../utils'
 
-@Component
-export default class Drawer extends Vue {
-  drawer: boolean = localStorage.drawer === "true" ? true : false;
+export default {
+  name: 'Drawer',
 
-  get items() {
-    let items = [
-      { title: "Главная", icon: "dashboard", path: "/" },
-      { title: "Об авторе", icon: "info", path: "/about" },
-    ];
+  data(context) {
+    let drawer = false
 
-    if (this.isUserLoggedIn) {
-      items.splice(1, 0, {
-        title: "Твои посты",
-        icon: "edit",
-        path: "/your-posts",
-      });
+    if (process.client) {
+      drawer = localStorage.drawer === 'true' ? true : false
     }
 
-    return items;
-  }
+    return { drawer: drawer }
+  },
+  computed: {
+    items() {
+      let items = [
+        { title: 'Главная', icon: 'dashboard', path: '/' },
+        { title: 'Об авторе', icon: 'info', path: '/about' },
+      ]
 
-  get isUserLoggedIn() {
-    return isValidToken(this.$store.state.user.token);
-  }
+      if (this.isUserLoggedIn) {
+        items.splice(1, 0, {
+          title: 'Твои посты',
+          icon: 'edit',
+          path: '/your-posts',
+        })
+      }
+      return items
+    },
+    isUserLoggedIn() {
+      return isValidToken(this.$store.state.user.token)
+    },
+    user() {
+      return this.$store.state.user.user
+    },
+  },
+  methods: {
+    switchDrawer() {
+      if (process.client) {
+        this.drawer = !this.drawer
+        localStorage.drawer = this.drawer
+      }
+    },
 
-  get user() {
-    return this.$store.state.user.user;
-  }
-
-  switchDrawer(): void {
-    this.drawer = !this.drawer;
-    localStorage.drawer = this.drawer;
-  }
-
-  logout(): void {
-    this.$store.dispatch("logout");
-    if (
-      this.$router.currentRoute.fullPath !== "/" &&
-      this.$router.currentRoute.fullPath !== "/about"
-    ) {
-      this.$router.push("/");
-    }
-  }
+    async logout() {
+      await this.$store.dispatch('logout')
+      if (
+        this.$router.currentRoute.fullPath !== '/' &&
+        this.$router.currentRoute.fullPath !== '/about'
+      ) {
+        this.$router.push('/')
+      }
+    },
+  },
 }
 </script>

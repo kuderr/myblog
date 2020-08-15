@@ -38,29 +38,34 @@
   </v-container>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-
-@Component
-export default class Login extends Vue {
-  private email: string = "";
-  private password: string = "";
-
-  get loading() {
-    return this.$store.state.shared.loading;
-  }
-
-  async onSubmit() {
-    let res = await this.$store.dispatch("login", {
-      email: this.email,
-      password: this.password,
-    });
-
-    if (res) {
-      this.$router.push("/");
-      this.$store.dispatch("fetchUserPosts", res.id);
+<script>
+export default {
+  name: 'Login',
+  data() {
+    return {
+      email: '',
+      password: '',
     }
-  }
+  },
+  computed: {
+    loading() {
+      return this.$store.state.shared.loading
+    },
+  },
+  methods: {
+    async onSubmit() {
+      if (this.$refs.form.validate()) {
+        let res = await this.$store.dispatch('login', {
+          email: this.email,
+          password: this.password,
+        })
+        if (res) {
+          this.$router.push('/')
+          this.$store.dispatch('fetchUserPosts', res.id)
+        }
+      }
+    },
+  },
 }
 </script>
 

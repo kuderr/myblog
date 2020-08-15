@@ -1,44 +1,44 @@
 export default {
   state: {
     loading: false,
-    error: "",
-    message: "",
+    error: '',
+    message: '',
   },
   mutations: {
     switchLoading(state) {
-      state.loading = !state.loading;
+      state.loading = !state.loading
     },
     setError(state, payload) {
-      state.error = payload["response"].data.error;
+      state.error = payload['response'].data.error
     },
     clearError(state) {
-      state.error = null;
+      state.error = null
     },
     setMessage(state, payload) {
-      state.message = payload.data.message;
+      state.message = payload.data.message
     },
     setMessageFromText(state, payload) {
-      state.message = payload;
+      state.message = payload
     },
     clearMessage(state) {
-      state.message = null;
+      state.message = null
     },
   },
   actions: {
     switchLoading({ commit }) {
-      commit("switchLoading");
+      commit('switchLoading')
     },
     setError({ commit }, payload) {
-      commit("setError", payload);
+      commit('setError', payload)
     },
     clearError({ commit }) {
-      commit("clearError");
+      commit('clearError')
     },
     setMessage({ commit }, payload) {
-      commit("setMessage", payload);
+      commit('setMessage', payload)
     },
     clearMessage({ commit }) {
-      commit("clearMessage");
+      commit('clearMessage')
     },
   },
-};
+}
