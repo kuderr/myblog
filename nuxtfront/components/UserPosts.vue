@@ -24,18 +24,19 @@
 <script>
 export default {
   name: 'UserPosts',
+  middleware: 'authenticated',
   data() {
     return {
       post: {
         title: 'Новый пост',
         summary: 'Новый пост',
-        authorId: this.$auth.user.id,
+        authorId: this.$store.state.user.user.id,
       },
     }
   },
   computed: {
     user() {
-      return this.$auth.user
+      return this.$store.state.user.user
     },
     posts() {
       return this.$store.state.user.userPosts

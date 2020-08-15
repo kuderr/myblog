@@ -4,7 +4,7 @@
 
     <v-main>
       <v-container fluid>
-        <nuxt></nuxt>
+        <nuxt />
       </v-container>
     </v-main>
 
@@ -56,13 +56,10 @@ export default {
   async mounted() {
     this.$vuetify.theme.dark = localStorage.darkMode === 'true' ? true : false
     await this.$store.dispatch('fetchPosts')
-    console.log(this.$auth.$storage)
-    const token = this.$auth.getToken('token') || ''
+    const token = localStorage.token || ''
     if (token) {
-      const tokenParts = token.split('.')
-      const body = JSON.parse(atob(tokenParts[1]))
-      console.log(body)
-      this.$auth.setUser(body)
+      let res = await this.$store.dispatch('setDataFromToken', token)
+      this.$store.dispatch('fetchUserPosts', res.id)
     }
   },
   computed: {

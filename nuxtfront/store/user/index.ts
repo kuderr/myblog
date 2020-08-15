@@ -12,9 +12,22 @@ import { Post } from '..posts/models'
 export default {
   state: {
     userPosts: Array<Post>(),
+    user: new User(),
+    token: '',
   },
 
   mutations: {
+    setUser(state, payload) {
+      state.user = payload
+    },
+    setToken(state, payload) {
+      state.token = payload
+      localStorage.token = payload
+    },
+    clearUserData(state, payload) {
+      state.token = null
+      localStorage.removeItem('token')
+    },
     userPostsLoaded(state, payload: Post[]) {
       state.userPosts = payload
     },
@@ -42,6 +55,42 @@ export default {
   },
 
   actions: {
+    async login({ commit }, userData) {
+      try {
+        commit('switchLoading')
+        let res = await authenticate(userData)
+        const token = res.data.token
+        const tokenParts = token.split('.')
+        const body = JSON.parse(atob(tokenParts[1]))
+        await commit('setUser', body)
+        await commit('setToken', token)
+        return body
+      } catch (error) {
+        console.log(error)
+        commit('setError', error)
+        return null
+      } finally {
+        commit('switchLoading')
+      }
+    },
+    logout({ commit }) {
+      commit('clearUserData')
+    },
+    async setDataFromToken({ commit }, token) {
+      try {
+        commit('switchLoading')
+        const tokenParts = token.split('.')
+        const body = JSON.parse(atob(tokenParts[1]))
+        await commit('setUser', body)
+        await commit('setToken', token)
+        return body
+      } catch (error) {
+        commit('setError', error)
+        return null
+      } finally {
+        commit('switchLoading')
+      }
+    },
     async fetchUserPosts({ state, commit }, userId: number) {
       try {
         let res = await getUserPosts(userId, state.token)

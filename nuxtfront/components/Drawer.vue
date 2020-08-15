@@ -46,13 +46,15 @@ import { isValidToken } from '../utils'
 
 export default {
   name: 'Drawer',
-  data() {
-    return {
-      drawer: null,
+
+  data(context) {
+    let drawer = false
+
+    if (process.client) {
+      drawer = localStorage.drawer === 'true' ? true : false
     }
-  },
-  async mounted() {
-    this.drawer = localStorage.drawer === 'true' ? true : false
+
+    return { drawer: drawer }
   },
   computed: {
     items() {
@@ -68,27 +70,25 @@ export default {
           path: '/your-posts',
         })
       }
-
       return items
     },
     isUserLoggedIn() {
-      return this.$auth.loggedIn
+      return isValidToken(this.$store.state.user.token)
     },
     user() {
-      return this.$auth.user
+      return this.$store.state.user.user
     },
   },
   methods: {
     switchDrawer() {
-      this.drawer = !this.drawer
-      if (process.browser) {
+      if (process.client) {
+        this.drawer = !this.drawer
         localStorage.drawer = this.drawer
       }
     },
 
     async logout() {
-      await this.$auth.logout()
-      this.$auth.setToken('token', '')
+      await this.$store.dispatch('logout')
       if (
         this.$router.currentRoute.fullPath !== '/' &&
         this.$router.currentRoute.fullPath !== '/about'
