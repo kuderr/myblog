@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { authRequired } from '@/utils'
 
 Vue.use(VueRouter)
 
@@ -27,7 +26,6 @@ const routes = [
     path: '/your-posts',
     name: 'UserPosts',
     meta: { title: 'Твои посты' },
-    beforeEnter: authRequired,
     component: () =>
       import('@/components/UserPosts.vue').then((m) => m.default),
   },
@@ -35,7 +33,6 @@ const routes = [
     path: '/editor/:id',
     name: 'Editor',
     meta: { title: 'Редактор' },
-    beforeEnter: authRequired,
     component: () => import('@/components/Editor.vue').then((m) => m.default),
   },
   {

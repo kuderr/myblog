@@ -10,7 +10,7 @@
                 label="Email"
                 type="email"
                 @keyup.enter="onSubmit"
-                v-model.trim="email"
+                v-model.trim="login.email"
                 :rules="[v => !!v || 'required']"
               ></v-text-field>
               <v-text-field
@@ -18,7 +18,7 @@
                 label="Password"
                 type="password"
                 @keyup.enter="onSubmit"
-                v-model.trim="password"
+                v-model.trim="login.password"
                 :rules="[v => !!v || 'required']"
               ></v-text-field>
             </v-form>
@@ -42,7 +42,12 @@
 export default {
   name: 'Login',
   data() {
-    return { email: '', password: '' }
+    return {
+      login: {
+        email: '',
+        password: '',
+      },
+    }
   },
   computed: {
     loading() {
@@ -51,15 +56,29 @@ export default {
   },
   methods: {
     async onSubmit() {
-      let res = await this.$store.dispatch('login', {
-        email: this.email,
-        password: this.password,
-      })
-
-      if (res) {
-        this.$router.push('/')
-        this.$store.dispatch('fetchUserPosts', res.id)
+      try {
+        let res = await this.$auth.loginWith('local', { data: this.login })
+        console.log(res)
+        const token = res.data.token
+        const tokenParts = token.split('.')
+        const body = JSON.parse(atob(tokenParts[1]))
+        console.log(body)
+        this.$auth.setUser(body)
+        console.log(token)
+        this.$auth.setToken('token', token)
+        // this.$auth.setUserToken(token)
+      } catch (err) {
+        console.log(err)
       }
+
+      // let res = await this.$store.dispatch('login', {
+      //   email: this.email,
+      //   password: this.password,
+      // })
+      // if (res) {
+      //   this.$router.push('/')
+      //   this.$store.dispatch('fetchUserPosts', res.id)
+      // }
     },
   },
 }

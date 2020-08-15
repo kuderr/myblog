@@ -12,11 +12,3 @@ export function isValidToken(token) {
   // return now < exp;
   if (data) return true
 }
-
-export function authRequired(to, from, next) {
-  if (!isValidToken(store().getters.token)) {
-    next('/')
-  } else {
-    next()
-  }
-}

@@ -48,12 +48,11 @@ export default {
   name: 'Drawer',
   data() {
     return {
-      drawer: () => {
-        if (process.browser) {
-          return localStorage.drawer === 'true' ? true : false
-        }
-      },
+      drawer: null,
     }
+  },
+  async mounted() {
+    this.drawer = localStorage.drawer === 'true' ? true : false
   },
   computed: {
     items() {
@@ -73,13 +72,10 @@ export default {
       return items
     },
     isUserLoggedIn() {
-      if (process.browser) {
-        console.log(localStorage.token)
-        return isValidToken(localStorage.token)
-      }
+      return this.$auth.loggedIn
     },
     user() {
-      return this.$store.state.user.user
+      return this.$auth.user
     },
   },
   methods: {
@@ -90,8 +86,9 @@ export default {
       }
     },
 
-    logout() {
-      this.$store.dispatch('logout')
+    async logout() {
+      await this.$auth.logout()
+      this.$auth.setToken('token', '')
       if (
         this.$router.currentRoute.fullPath !== '/' &&
         this.$router.currentRoute.fullPath !== '/about'

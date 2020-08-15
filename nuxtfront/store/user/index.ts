@@ -12,24 +12,9 @@ import { Post } from '..posts/models'
 export default {
   state: {
     userPosts: Array<Post>(),
-    user: new User(),
-    token: null,
   },
 
   mutations: {
-    setToken(state, payload) {
-      if (process.browser) {
-        localStorage.setItem('token', payload.token)
-      }
-      state.token = payload.token
-    },
-    clearUserData(state) {
-      state.token = ''
-      if (process.browser) {
-        window.localStorage.removeItem('token')
-      }
-    },
-
     userPostsLoaded(state, payload: Post[]) {
       state.userPosts = payload
     },
@@ -57,42 +42,6 @@ export default {
   },
 
   actions: {
-    async login({ state, commit }, userData) {
-      try {
-        commit('switchLoading')
-        let res = await authenticate(userData)
-        commit('setToken', res.data)
-        const tokenParts = res.data.token.split('.')
-        const body = JSON.parse(atob(tokenParts[1]))
-        state.user = body
-        return body
-      } catch (error) {
-        commit('setError', error)
-        return null
-      } finally {
-        commit('switchLoading')
-      }
-    },
-    logout({ commit }) {
-      commit('clearUserData')
-    },
-    async setDataFromToken({ commit, state }) {
-      try {
-        commit('switchLoading')
-        let tokenParts = null
-        if (process.browser) {
-          tokenParts = localStorage.token.split('.')
-        }
-        const body = JSON.parse(atob(tokenParts[1]))
-        state.user = body
-        return body
-      } catch (error) {
-        commit('setError', error)
-        return null
-      } finally {
-        commit('switchLoading')
-      }
-    },
     async fetchUserPosts({ state, commit }, userId: number) {
       try {
         let res = await getUserPosts(userId, state.token)
@@ -121,11 +70,6 @@ export default {
       updatePost(post, state.token)
       commit('userPostUpdated', post)
       if (post.published === true) commit('postUpdated', post)
-    },
-  },
-  getters: {
-    token(state) {
-      return state.token
     },
   },
 }

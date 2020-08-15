@@ -29,13 +29,13 @@ export default {
       post: {
         title: 'Новый пост',
         summary: 'Новый пост',
-        authorId: this.user.id,
+        authorId: this.$auth.user.id,
       },
     }
   },
   computed: {
     user() {
-      return this.$store.state.user.user
+      return this.$auth.user
     },
     posts() {
       return this.$store.state.user.userPosts

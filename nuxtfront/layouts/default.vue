@@ -54,16 +54,15 @@ export default {
     Drawer,
   },
   async mounted() {
-    this.$store.dispatch('fetchPosts')
-
-    if (process.browser) {
-      this.$store.commit('setToken', localStorage.token || '')
-
-      this.$vuetify.theme.dark = localStorage.darkMode === 'true' ? true : false
-      if (isValidToken(localStorage.token)) {
-        let res = await this.$store.dispatch('setDataFromToken')
-        this.$store.dispatch('fetchUserPosts', res.id)
-      }
+    this.$vuetify.theme.dark = localStorage.darkMode === 'true' ? true : false
+    await this.$store.dispatch('fetchPosts')
+    console.log(this.$auth.$storage)
+    const token = this.$auth.getToken('token') || ''
+    if (token) {
+      const tokenParts = token.split('.')
+      const body = JSON.parse(atob(tokenParts[1]))
+      console.log(body)
+      this.$auth.setUser(body)
     }
   },
   computed: {
