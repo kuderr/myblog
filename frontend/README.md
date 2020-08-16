@@ -6,13 +6,13 @@
 # install dependencies
 $ npm install
 
-# serve with hot reload at localhost:3000
+# serve with hot reload at localhost:8080
 $ npm run dev
 
 # build for production and launch server
 $ npm run build
-$ npm run start
-$ pm2 start npm -- start
+$ npm run start # to test if it works
+$ pm2 start npm --name "blog" -- start # supervisor for nodejs server
 $ pm2 monit
 $ pm2 kill
 

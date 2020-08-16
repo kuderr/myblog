@@ -19,6 +19,10 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      {
+        name: 'google-site-verification',
+        content: 'ZQFPMRUsna03EGuCsENRGXPlcLK4Cc8X6qkIyIM0Tbs',
+      },
     ],
     link: [
       {
@@ -89,7 +93,18 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ['@nuxt/typescript-build', '@nuxtjs/vuetify', '@nuxtjs/router'],
+  buildModules: [
+    '@nuxt/typescript-build',
+    '@nuxtjs/vuetify',
+    '@nuxtjs/router',
+    [
+      '@nuxtjs/google-analytics',
+      {
+        id: 'UA-174939995-1',
+      },
+    ],
+  ],
+
   /*
    ** Nuxt.js modules
    */

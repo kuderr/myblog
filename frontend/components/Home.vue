@@ -32,5 +32,17 @@ export default {
       return this.$store.state.posts.posts
     },
   },
+  head() {
+    return {
+      meta: [
+        {
+          name: 'description',
+          content:
+            'Привет, я Дима. В своём блоге пишу об интересующих меня вещах. Рад делиться опытом и мыслями, а также узнавать постоянно что-то новое.',
+        },
+        { name: 'keywords', content: 'блог, blog, tech' },
+      ],
+    }
+  },
 }
 </script>
