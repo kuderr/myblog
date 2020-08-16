@@ -108,3 +108,21 @@ CREATE TABLE comments (
 # DB scheme
 
 ![db scheme 0.1](https://drive.google.com/uc?export=view&id=1LWgiKfFSwrTIfYnsfAQjOa7sDSQc4oLN "db scheme 0.1")
+
+# Systemd config
+
+```bash
+[Unit]
+Description=blog api
+
+[Service]
+User=kuder
+Group=www-data
+EnvironmentFile=/home/kuder/.blog_env
+ExecStart=/home/kuder/myblog/backend/backend.o
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
+```
