@@ -12,6 +12,9 @@ $ npm run dev
 # build for production and launch server
 $ npm run build
 $ npm run start
+$ pm2 start npm -- start
+$ pm2 monit
+$ pm2 kill
 
 # generate static project
 $ npm run generate

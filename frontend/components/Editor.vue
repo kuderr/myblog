@@ -41,26 +41,34 @@
             <tiptap-vuetify
               v-model="post.body"
               :extensions="extensions"
-              @keydown.meta.s.prevent="updatePost()"
-              @keydown.ctrl.s.prevent="updatePost()"
               :toolbar-attributes="{ color: 'black', dark: true }"
               placeholder="Текст поста"
             />
+            <v-textarea
+              v-if="htmlEditor"
+              class="mt-3"
+              v-model="post.body"
+              auto-grow="true"
+              outlined="true"
+              solo="true"
+            ></v-textarea>
             <template>
-              <v-tooltip right>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    class="mt-4"
-                    v-bind="attrs"
-                    v-on="on"
-                    block
-                    color="secondary"
-                    :loading="saveLoader"
-                    @click="updatePost()"
-                  >Сохранить</v-btn>
-                </template>
-                <span>Ctrl+S (Cmd+S)</span>
-              </v-tooltip>
+              <v-btn
+                class="mt-4"
+                v-bind="attrs"
+                block
+                color="secondary"
+                @click="htmlEditor = ! htmlEditor"
+              >HTML</v-btn>
+              <v-btn
+                class="mt-2"
+                v-bind="attrs"
+                v-on="on"
+                block
+                color="secondary"
+                :loading="saveLoader"
+                @click="updatePost()"
+              >Сохранить</v-btn>
               <v-btn
                 class="mt-1"
                 block
@@ -115,6 +123,7 @@ export default {
   data() {
     return {
       saveLoader: false,
+      htmlEditor: false,
       valid: false,
       // tiptap extensions declare
       extensions: [
