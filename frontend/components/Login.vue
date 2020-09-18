@@ -47,6 +47,13 @@ export default {
       password: '',
     }
   },
+  head() {
+    return {
+      meta: [
+        { name: 'title', content: "Вход" },
+      ]
+    }
+  },
   computed: {
     loading() {
       return this.$store.state.shared.loading

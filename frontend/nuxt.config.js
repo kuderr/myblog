@@ -18,6 +18,8 @@ export default {
   head: {
     meta: [
       { charset: 'utf-8' },
+      { name: 'keywords', content: 'blog, programming' },
+      { name: 'keywords', content: 'блог, программирование' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       {
         name: 'google-site-verification',

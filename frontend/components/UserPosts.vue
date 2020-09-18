@@ -34,6 +34,13 @@ export default {
       },
     }
   },
+  head() {
+    return {
+      meta: [
+        { name: 'title', content: "Твои посты" },
+      ]
+    }
+  },
   computed: {
     user() {
       return this.$store.state.user.user

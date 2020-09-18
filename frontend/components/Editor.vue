@@ -119,6 +119,13 @@ export default {
   components: {
     TiptapVuetify,
   },
+  head() {
+    return {
+      meta: [
+        { name: 'title', content: "Редактор" },
+      ]
+    }
+  },
   middleware: 'authenticated',
   data() {
     return {

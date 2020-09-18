@@ -35,6 +35,7 @@ export default {
   head() {
     return {
       meta: [
+        {name: 'title', content: "Посты"},
         {
           name: 'description',
           content:
