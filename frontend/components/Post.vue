@@ -32,8 +32,8 @@ export default {
   },
   head() {
     return {
+      title: this.post.title,
       meta: [
-        { name: 'title', content: this.post.title },
         { name: 'description', content: this.post.summary },
         { name: 'author', content: 'Dmitriy Kudryavtsev' },
         { name: 'article:published_time', content: this.post.dateCreated },

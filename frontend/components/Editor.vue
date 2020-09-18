@@ -121,9 +121,7 @@ export default {
   },
   head() {
     return {
-      meta: [
-        { name: 'title', content: "Редактор" },
-      ]
+      title: "Редактор",
     }
   },
   middleware: 'authenticated',

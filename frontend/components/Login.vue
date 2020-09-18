@@ -49,9 +49,7 @@ export default {
   },
   head() {
     return {
-      meta: [
-        { name: 'title', content: "Вход" },
-      ]
+      title: "Вход",
     }
   },
   computed: {

@@ -36,9 +36,7 @@ export default {
   },
   head() {
     return {
-      meta: [
-        { name: 'title', content: "Твои посты" },
-      ]
+      title: "Твои посты",
     }
   },
   computed: {

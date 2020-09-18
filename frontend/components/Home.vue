@@ -34,8 +34,8 @@ export default {
   },
   head() {
     return {
+      title: "Посты",
       meta: [
-        {name: 'title', content: "Посты"},
         {
           name: 'description',
           content:

@@ -137,9 +137,7 @@ export default {
   name: 'About',
   head() {
     return {
-      meta: [
-        { name: 'title', content: "Об авторе" },
-      ]
+      title: "Об авторе",
     }
   }
 }
