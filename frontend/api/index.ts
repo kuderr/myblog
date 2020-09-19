@@ -1,36 +1,36 @@
-import axios from "axios";
+import axios from 'axios'
 
 // const API_URL = "http://localhost:5000"; // dev
-const API_URL = "https://kuderblog.com/api"; // prod
+const API_URL = 'https://kuderblog.com/api' // prod
 
 export function authenticate(userData) {
-  return axios.post(`${API_URL}/login`, userData);
+  return axios.post(`${API_URL}/login`, userData)
 }
 
 export function getPost(postId: number) {
-  return axios.get(`${API_URL}/posts/${postId}`);
+  return axios.get(`${API_URL}/posts/${postId}`)
 }
 
 export function getPosts() {
-  return axios.get(`${API_URL}/posts`);
+  return axios.get(`${API_URL}/posts`)
 }
 
 export function addPost(postData, token: string) {
   return axios.post(`${API_URL}/posts`, postData, {
     headers: { Authorization: `Bearer: ${token}` },
-  });
+  })
 }
 
 export function updatePost(postData, token: string) {
   return axios.put(`${API_URL}/posts/${postData.id}`, postData, {
     headers: { Authorization: `Bearer: ${token}` },
-  });
+  })
 }
 
 export function getUserPosts(userId: number, token: string) {
   return axios.get(`${API_URL}/users/${userId}/posts`, {
     headers: { Authorization: `Bearer: ${token}` },
-  });
+  })
 }
 
 export function updatePublishedStatus(
@@ -46,11 +46,11 @@ export function updatePublishedStatus(
     {
       headers: { Authorization: `Bearer: ${token}` },
     }
-  );
+  )
 }
 
 export function deletePost(postId: number, token: string) {
   return axios.delete(`${API_URL}/posts/${postId}`, {
     headers: { Authorization: `Bearer: ${token}` },
-  });
+  })
 }

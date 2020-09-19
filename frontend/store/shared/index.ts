@@ -6,7 +6,9 @@ export default {
   },
   mutations: {
     switchLoading(state) {
+      console.log(state.loading)
       state.loading = !state.loading
+      console.log(state.loading)
     },
     setError(state, payload) {
       state.error = payload['response'].data.error

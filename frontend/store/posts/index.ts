@@ -1,5 +1,5 @@
-import { getPosts, getPost } from "@/api";
-import { Post } from "./models";
+import { getPosts, getPost } from '@/api'
+import { Post } from './models'
 
 export default {
   state: {
@@ -9,43 +9,43 @@ export default {
 
   mutations: {
     postsLoaded(state, payload: Post[]) {
-      state.posts = payload;
+      state.posts = payload
     },
     postLoaded(state, payload: Post) {
-      state.currentPost = payload;
+      state.currentPost = payload
     },
     postAdded(state, post: Post) {
-      state.posts.unshift(post);
+      state.posts.unshift(post)
     },
     postDeleted(state, postId: number) {
-      let i: number;
+      let i: number
       state.posts.forEach((post: Post, index: number) => {
         if (post.id === postId) {
-          i = index;
-          return;
+          i = index
+          return
         }
-      });
+      })
 
-      state.posts.splice(i, 1);
+      state.posts.splice(i, 1)
     },
     postUpdated(state, payload: Post) {
       state.posts.forEach((post: Post, index: number) => {
         if (post.id === payload.id) {
-          state.posts[index] = payload;
-          return;
+          state.posts[index] = payload
+          return
         }
-      });
+      })
     },
   },
 
   actions: {
     async fetchPosts({ commit }) {
-      let res = await getPosts();
-      commit("postsLoaded", res.data);
+      let res = await getPosts()
+      commit('postsLoaded', res.data)
     },
     async fetchPost({ commit }, postId) {
-      let res = await getPost(postId);
-      commit("postLoaded", res.data);
+      let res = await getPost(postId)
+      commit('postLoaded', res.data)
     },
   },
-};
+}

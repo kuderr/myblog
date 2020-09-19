@@ -1,24 +1,30 @@
 <template>
   <div id="post">
-    <v-layout align-center justify-center>
-      <v-flex xs12 sm10 md8>
-        <v-card class="mx-auto">
-          <v-img height="200px" :src="post.img"></v-img>
-          <v-card-title class="headline font-weight-bold d-flex justify-space-between">
-            {{ post.title }}
-            <time class="dateCreated">{{ postDateFormatted }}</time>
-          </v-card-title>
+    <client-only>
+      <v-layout align-center justify-center>
+        <v-flex xs12 sm10 md8>
+          <v-boilerplate :loading="loading" type="image, article">
+            <v-card class="mx-auto" elevation="3">
+              <v-img height="200px" :src="post.img"></v-img>
+              <v-card-title class="headline font-weight-bold d-flex justify-space-between">
+                {{ post.title }}
+                <time class="dateCreated">{{ postDateFormatted }}</time>
+              </v-card-title>
 
-          <v-card-text class="text--primary">
-            <div class="body-1" v-html="post.body"></div>
-          </v-card-text>
-        </v-card>
-      </v-flex>
-    </v-layout>
+              <v-card-text class="text--primary">
+                <div class="body-1" v-html="post.body"></div>
+              </v-card-text>
+            </v-card>
+          </v-boilerplate>
+        </v-flex>
+      </v-layout>
+    </client-only>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'Post',
   data() {
@@ -28,7 +34,30 @@ export default {
         month: 'numeric',
         day: 'numeric',
       },
+      loading: null,
     }
+  },
+  components: {
+    // Create a new component that
+    // extends v-skeleton-loader
+    VBoilerplate: {
+      functional: true,
+
+      render(h, { data, props, children }) {
+        return h(
+          'v-skeleton-loader',
+          {
+            ...data,
+            props: {
+              boilerplate: true,
+              elevation: 3,
+              ...props,
+            },
+          },
+          children
+        )
+      },
+    },
   },
   head() {
     return {
@@ -63,20 +92,19 @@ export default {
       ],
     }
   },
-  computed: {
-    post() {
-      let post = this.$store.state.posts.currentPost
-      return post
-    },
-
+  computed: mapState({
+    post: (state) => state.posts.currentPost,
     postDateFormatted() {
       let timestamp = Date.parse(this.post.dateCreated)
       let postDate = new Date(timestamp)
       return postDate.toLocaleString('ru', this.options)
     },
-  },
-  async asyncData({ store, params }) {
-    await store.dispatch('fetchPost', params.id)
+  }),
+  async created() {
+    this.loading = true
+    let postId = this.$router.currentRoute.params['id']
+    await this.$store.dispatch('fetchPost', postId)
+    this.loading = false
   },
 }
 </script>

@@ -1,5 +1,6 @@
 <template>
   <div class="d-flex flex-wrap mb-6 justify-center">
+    <v-progress-linear v-if="posts.length === 0" stream indeterminate color="primary"></v-progress-linear>
     <v-card
       v-for="post in posts"
       :key="post.id"
@@ -32,9 +33,29 @@ export default {
       return this.$store.state.posts.posts
     },
   },
+  components: {
+    VBoilerplate: {
+      functional: true,
+
+      render(h, { data, props, children }) {
+        return h(
+          'v-skeleton-loader',
+          {
+            ...data,
+            props: {
+              boilerplate: true,
+              elevation: 3,
+              ...props,
+            },
+          },
+          children
+        )
+      },
+    },
+  },
   head() {
     return {
-      title: "Посты",
+      title: 'Посты',
       meta: [
         {
           name: 'description',

@@ -2,7 +2,7 @@
   <div id="about">
     <v-layout align-center justify-center>
       <v-flex xs12 sm10 md8>
-        <v-card class="mx-auto">
+        <v-card class="mx-auto" elevation="3">
           <div class="text-center py-3">
             <v-avatar center class="profile" color="grey" size="200">
               <v-img
@@ -136,9 +136,9 @@ export default {
   name: 'About',
   head() {
     return {
-      title: "Об авторе",
+      title: 'Об авторе',
     }
-  }
+  },
 }
 </script>
 
