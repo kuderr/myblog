@@ -1,6 +1,11 @@
 <template>
   <div class="d-flex flex-wrap mb-6 justify-center">
-    <v-progress-linear v-if="posts.length === 0" stream indeterminate color="primary"></v-progress-linear>
+    <v-progress-linear
+      v-if="posts.length === 0"
+      stream
+      indeterminate
+      color="primary"
+    ></v-progress-linear>
     <v-card
       v-for="post in posts"
       :key="post.id"
@@ -17,9 +22,7 @@
       </v-card-title>
 
       <v-card-text class="headline font-weight-bold">
-        {{
-        post.summary
-        }}
+        {{ post.summary }}
       </v-card-text>
     </v-card>
   </div>
@@ -31,26 +34,6 @@ export default {
   computed: {
     posts() {
       return this.$store.state.posts.posts
-    },
-  },
-  components: {
-    VBoilerplate: {
-      functional: true,
-
-      render(h, { data, props, children }) {
-        return h(
-          'v-skeleton-loader',
-          {
-            ...data,
-            props: {
-              boilerplate: true,
-              elevation: 3,
-              ...props,
-            },
-          },
-          children
-        )
-      },
     },
   },
   head() {

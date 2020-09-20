@@ -3,10 +3,16 @@
     <client-only>
       <v-layout align-center justify-center>
         <v-flex xs12 sm10 md8>
-          <v-boilerplate :loading="loading" type="image, article">
+          <v-skeleton-loader
+            :loading="loading"
+            transition="fade-transition"
+            type="card"
+          >
             <v-card class="mx-auto" elevation="3">
               <v-img height="200px" :src="post.img"></v-img>
-              <v-card-title class="headline font-weight-bold d-flex justify-space-between">
+              <v-card-title
+                class="headline font-weight-bold d-flex justify-space-between"
+              >
                 {{ post.title }}
                 <time class="dateCreated">{{ postDateFormatted }}</time>
               </v-card-title>
@@ -15,7 +21,7 @@
                 <div class="body-1" v-html="post.body"></div>
               </v-card-text>
             </v-card>
-          </v-boilerplate>
+          </v-skeleton-loader>
         </v-flex>
       </v-layout>
     </client-only>
