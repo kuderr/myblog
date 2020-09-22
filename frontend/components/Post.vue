@@ -1,30 +1,28 @@
 <template>
   <div id="post">
-    <client-only>
-      <v-layout align-center justify-center>
-        <v-flex xs12 sm10 md8>
-          <v-skeleton-loader
-            :loading="loading"
-            transition="fade-transition"
-            type="card"
-          >
-            <v-card class="mx-auto" elevation="3">
-              <v-img height="200px" :src="post.img"></v-img>
-              <v-card-title
-                class="headline font-weight-bold d-flex justify-space-between"
-              >
-                {{ post.title }}
-                <time class="dateCreated">{{ postDateFormatted }}</time>
-              </v-card-title>
+    <v-layout align-center justify-center>
+      <v-flex xs12 sm10 md8>
+        <v-skeleton-loader
+          :loading="loading"
+          transition="fade-transition"
+          type="card"
+        >
+          <v-card class="mx-auto" elevation="3">
+            <v-img height="200px" :src="post.img"></v-img>
+            <v-card-title
+              class="headline font-weight-bold d-flex justify-space-between"
+            >
+              {{ post.title }}
+              <time class="dateCreated">{{ postDateFormatted }}</time>
+            </v-card-title>
 
-              <v-card-text class="text--primary">
-                <div class="body-1" v-html="post.body"></div>
-              </v-card-text>
-            </v-card>
-          </v-skeleton-loader>
-        </v-flex>
-      </v-layout>
-    </client-only>
+            <v-card-text class="text--primary">
+              <div class="body-1" v-html="post.body"></div>
+            </v-card-text>
+          </v-card>
+        </v-skeleton-loader>
+      </v-flex>
+    </v-layout>
   </div>
 </template>
 
@@ -42,28 +40,6 @@ export default {
       },
       loading: null,
     }
-  },
-  components: {
-    // Create a new component that
-    // extends v-skeleton-loader
-    VBoilerplate: {
-      functional: true,
-
-      render(h, { data, props, children }) {
-        return h(
-          'v-skeleton-loader',
-          {
-            ...data,
-            props: {
-              boilerplate: true,
-              elevation: 3,
-              ...props,
-            },
-          },
-          children
-        )
-      },
-    },
   },
   head() {
     return {
