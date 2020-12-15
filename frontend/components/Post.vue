@@ -157,4 +157,9 @@ p {
   margin-bottom: 5px !important;
   min-height: 1rem;
 }
+
+pre,
+code {
+  overflow: scroll;
+}
 </style>
