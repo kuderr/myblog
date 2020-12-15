@@ -160,6 +160,6 @@ p {
 
 pre,
 code {
-  overflow: scroll;
+  white-space: pre-wrap;
 }
 </style>
