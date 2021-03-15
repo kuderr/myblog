@@ -79,7 +79,7 @@ func getPostData(postId int) (Post, error) {
 	var post Post
 	err := row.Scan(&post.ID, &post.Title, &post.Summary, &post.Body,
 		&post.DateCreated, &post.DateUpdated, &post.AuthorId, &post.Published,
-		&post.Image, &post.Color)
+		&post.Image, &post.Color, &post.Views)
 	switch {
 	case err == sql.ErrNoRows:
 		return post, nil
