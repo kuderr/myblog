@@ -45,7 +45,7 @@ func main() {
 	router.DELETE("/api/posts/:id", TokenAuth(posts.DeletePost))
 	router.GET("/api/users/:id/posts", TokenAuth(posts.GetUserPosts))
 	router.PATCH("/api/posts/:id/published", TokenAuth(posts.UpdatePostPublishedStatus))
-	router.PUT("/api/posts/:id/views", TokenAuth(posts.AddView))
+	router.PUT("/api/posts/:id/views", posts.AddView)
 
 	router.POST("/api/login", users.Login)
 
