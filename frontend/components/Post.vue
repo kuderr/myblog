@@ -13,7 +13,15 @@
               class="headline font-weight-bold d-flex justify-space-between"
             >
               {{ post.title }}
-              <time class="dateCreated">{{ postDateFormatted }}</time>
+              <div class="postInfo">
+                <div>
+                  <time>{{ postDateFormatted }}</time>
+                </div>
+                <div class="views">
+                  <v-icon small> mdi-eye </v-icon>
+                  <span>{{ post.views }}</span>
+                </div>
+              </div>
             </v-card-title>
 
             <v-card-text class="text--primary">
@@ -92,11 +100,16 @@ export default {
 </script>
 
 <style lang="scss">
-.dateCreated {
+.postInfo {
   color: #6a737d;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 14px;
 }
+
+.views {
+  float: right;
+}
+
 .v-application code {
   background-color: black;
   color: white;
@@ -104,6 +117,7 @@ export default {
   margin-left: auto;
   margin-right: auto;
 }
+
 img:not(.avatar) {
   max-width: 100%;
   padding: 5px 0;

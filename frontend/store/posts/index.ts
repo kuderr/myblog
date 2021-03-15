@@ -1,4 +1,4 @@
-import { getPosts, getPost } from '@/api'
+import { getPosts, getPost, addView } from '@/api'
 import { Post } from './models'
 
 export default {
@@ -43,9 +43,24 @@ export default {
       let res = await getPosts()
       commit('postsLoaded', res.data)
     },
-    async fetchPost({ commit }, postId) {
+    async fetchPost({ state, commit }, postId) {
       let res = await getPost(postId)
       commit('postLoaded', res.data)
+
+      let postsVisited = sessionStorage.getItem('postsVisited')
+      if (postsVisited){
+        var posts = postsVisited.split(';')
+      }
+      else{
+        var posts = Array<string>()
+      }
+      
+      if(posts.indexOf(postId.toString()) === -1){
+        await addView(postId)
+        posts.push(postId)
+        sessionStorage.setItem('postsVisited', posts.join(';'))
+      }
+
     },
   },
 }

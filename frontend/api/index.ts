@@ -15,6 +15,10 @@ export function getPosts() {
   return axios.get(`${API_URL}/posts`)
 }
 
+export function addView(postId: number) {
+  return axios.put( `${API_URL}/posts/${postId}/views`, {})
+}
+
 export function addPost(postData, token: string) {
   return axios.post(`${API_URL}/posts`, postData, {
     headers: { Authorization: `Bearer: ${token}` },
