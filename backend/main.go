@@ -45,6 +45,7 @@ func main() {
 	router.DELETE("/api/posts/:id", TokenAuth(posts.DeletePost))
 	router.GET("/api/users/:id/posts", TokenAuth(posts.GetUserPosts))
 	router.PATCH("/api/posts/:id/published", TokenAuth(posts.UpdatePostPublishedStatus))
+	router.PUT("/api/posts/:id/views", TokenAuth(posts.AddView))
 
 	router.POST("/api/login", users.Login)
 
@@ -66,14 +67,6 @@ func main() {
 	fmt.Println("Server started at http://127.0.0.1:5000")
 
 	log.Fatal(srv.ListenAndServe())
-}
-
-func test(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	resp := responses.Response{Msg: "Good"}
-	user := r.Context().Value("user")
-	fmt.Printf("%#v", user)
-
-	responses.SendError(w, resp, 200)
 }
 
 func TokenAuth(handler httprouter.Handle) httprouter.Handle {

@@ -183,3 +183,27 @@ func UpdatePostPublishedStatus(w http.ResponseWriter, r *http.Request, ps httpro
 		http.Error(w, http.StatusText(500), 500)
 	}
 }
+
+func AddView(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	id := ps.ByName("id")
+	postId, err := strconv.Atoi(id)
+	if err != nil {
+		log.Println(err)
+		resp := responses.ErrorResponse{"Invalid id provided"}
+		responses.SendError(w, resp, 400)
+		return
+	}
+
+	err = addView(postId)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	resp := responses.Response{"Successfully added a view"}
+	err = responses.SendData(w, resp, 200)
+	if err != nil {
+		http.Error(w, http.StatusText(500), 500)
+	}
+}

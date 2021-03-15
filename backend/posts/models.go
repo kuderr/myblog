@@ -17,6 +17,7 @@ type Post struct {
 	DateCreated time.Time `json:"dateCreated"`
 	DateUpdated time.Time `json:"dateUpdated"`
 	AuthorId    int       `json:"authorId"`
+	Views				int 			`json:"views"`
 }
 
 type PostShorten struct {
@@ -26,6 +27,7 @@ type PostShorten struct {
 	DateCreated time.Time `json:"dateCreated"`
 	Image       string    `json:"img"`
 	Color       string    `json:"color"`
+	Views				int 			`json:"views"`
 }
 
 func allPostsShorten() ([]PostShorten, error) {
@@ -141,6 +143,16 @@ func updatePost(postId int, post *Post) error {
 										WHERE id = $7`,
 		post.Title, post.Summary, post.Body, time.Now(), post.Image, post.Color, postId)
 	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func addView(postId int) error {
+	_, err := config.DB.Exec(`UPDATE posts SET views = views + 1
+														WHERE id = $1`, postId)
+	if err != nil{
 		return err
 	}
 
